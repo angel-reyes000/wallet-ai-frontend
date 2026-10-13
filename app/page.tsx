@@ -19,29 +19,8 @@ export default function Home () {
 
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
-  function scrollIntoViewMain () {
-    document.getElementById("mainSection")?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
-  }
-
-  function scrollIntoViewSecurity () {
-    document.getElementById("sectionSecurity")?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    })
-  }
-
-  function scrollIntoViewWork () {
-    document.getElementById("sectionWork")?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-    })
-  }
-
-  function scrollIntoViewPlans () {
-    document.getElementById("sectionPlans")?.scrollIntoView({
+  function scrollIntoViewPersonality (section: string) {
+    document.getElementById(section)?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     })
@@ -61,23 +40,23 @@ export default function Home () {
     <>
       {/*--------------------------------------------------ORIGINAL MENU----------------------------------------------------*/}
       <header className='fixed flex flex-col md:flex-row items-start md:items-center justify-between bg-[rgb(250,255,250)] px-10 md:px-20 lg:px-30 py-5 md:py-1 w-full z-10'>
-        <div onClick={() => scrollIntoViewMain()} className='hidden md:flex items-center cursor-pointer gap-2'>
+        <div onClick={() => scrollIntoViewPersonality("mainSection")} className='hidden md:flex items-center cursor-pointer gap-2'>
           <Image src={logo} width={40} height={40} alt='logo'></Image>
           <p className='flex text-black text-[1.5rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-green-200 bg-clip-text text-transparent'>AI</span></p>
         </div>
         <div className='hidden md:flex items-center gap-5 lg:gap-15'>
-          <p onClick={() => scrollIntoViewWork()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
-          <p onClick={() => scrollIntoViewSecurity()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
-          <p onClick={() => scrollIntoViewPlans()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
           <button className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
         </div>
         {openMenu ? (
           <>
             <FaPlus onClick={() => setOpenMenu(!openMenu)} size={40} className='rotate-45 md:hidden' />
             <div className='flex flex-col md:hidden items-end w-full'>
-              <p onClick={() => scrollIntoViewWork()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
-              <p onClick={() => scrollIntoViewSecurity()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
-              <p onClick={() => scrollIntoViewPlans()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>          
+              <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
+              <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
+              <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>          
             </div>
           </>          
         ):(
@@ -85,34 +64,46 @@ export default function Home () {
         )}        
       </header>
       {/*--------------------------------------------------MENU FAKE----------------------------------------------------*/}
-      <header className='flex flex-col md:flex-row items-start md:items-center justify-between bg-[rgb(250,255,250)] px-10 md:px-20 lg:px-30 py-5 md:py-1'>
-        <div onClick={() => scrollIntoViewMain()} className='hidden md:flex items-center cursor-pointer gap-2'>
+      <header className='flex flex-col md:flex-row items-start md:items-center justify-between bg-[rgb(250,255,250)] px-10 md:px-20 lg:px-30 py-5 md:py-1 w-full z-0'>
+        <div onClick={() => scrollIntoViewPersonality("mainSection")} className='hidden md:flex items-center cursor-pointer gap-2'>
           <Image src={logo} width={40} height={40} alt='logo'></Image>
           <p className='flex text-black text-[1.5rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-green-200 bg-clip-text text-transparent'>AI</span></p>
         </div>
         <div className='hidden md:flex items-center gap-5 lg:gap-15'>
-          <p onClick={() => scrollIntoViewWork()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
-          <p onClick={() => scrollIntoViewSecurity()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
-          <p onClick={() => scrollIntoViewPlans()} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
+          <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
           <button className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
-        </div>       
+        </div>
+        {openMenu ? (
+          <>
+            <FaPlus onClick={() => setOpenMenu(!openMenu)} size={40} className='rotate-45 md:hidden' />
+            <div className='flex flex-col md:hidden items-end w-full'>
+              <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
+              <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
+              <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>          
+            </div>
+          </>          
+        ):(
+          <LuMenu onClick={() => setOpenMenu(!openMenu)} size={40} className='flex md:hidden' />
+        )}        
       </header>
       <main className='h-auto bg-red-100'>
-        <section id='mainSection' className='grid grid-rows-[1fr_1fr] lg:grid-cols-[1fr_1fr] items-center justify-items-center bg-[url(@/public/images-home/fondo-cuadriculado.png)] px-10 md:px-20 lg:px-30 py-20'>
+        <section id='mainSection' className='grid grid-rows-[1fr_1fr] md:grid-rows-[0fr_0fr] md:grid-cols-[1fr_1fr] h-auto items-center justify-items-center bg-[url(@/public/images-home/fondo-cuadriculado.png)] px-10 md:px-20 lg:px-30 py-20'>
           <div className='flex flex-col gap-20 w-[90%]'>
             <div className='flex flex-col gap-5'>
               <h1 className='text-[3.5rem] font-black'>Knows where your money goes before it's gone</h1>
               <p className='text-[1.1rem] font-semibold'>Gather your accounts and see how much you have left at the end of the month.</p>
             </div>            
             <div className='flex justify-center md:justify-start'>
-              <button data-aos="zoom-in" className='font-semibold w-full md:w-[40%] text-lg bg-[rgb(5,100,0)] text-white p-2 rounded-md cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Start...</button>
+              <button data-aos="zoom-in" className='font-semibold w-full md:w-[70%] lg:w-[50%] text-lg bg-[rgb(5,100,0)] text-white p-2 rounded-md cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Start...</button>
             </div>
           </div>
           <Image data-aos="zoom-out" className='p-1' src={grafica} width={700} height={700} alt='grafica'></Image>
         </section>
         <section id="sectionWork" className='flex flex-col px-10 md:px-20 lg:px-30 py-20 bg-[rgb(250,255,250)] gap-10'>
           <h2 className='text-[2.5rem] font-bold'>¿How does it work?</h2>
-          <div className='grid grid-rows-[1fr_1fr_1fr] md:grid-cols-[1fr_1fr_1fr] gap-5'>
+          <div className='flex flex-col md:flex-row gap-5'>
             <div data-aos="fade-right" className='flex flex-col gap-1'>
               <Image src={step_1} width={400} height={400} className='rounded-2xl' alt='login ilustration'></Image>
               <p className='text-[1.5rem] font-bold'>Log in</p>
