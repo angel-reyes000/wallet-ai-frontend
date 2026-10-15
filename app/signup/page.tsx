@@ -48,6 +48,8 @@ export default function SignUp () {
                 return
             }
 
+            router.push('/login')
+
         } catch (error) {
             console.log("Error in postUser frontend: ", error);
         } finally {

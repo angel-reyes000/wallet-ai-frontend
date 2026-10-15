@@ -11,14 +11,17 @@ import 'aos/dist/aos.css';
 import AOS from 'aos';
 import { useEffect } from 'react';
 import security from '@/public/images-home/escudo-sin-fondo.png';
-import { LuLockKeyhole, LuEyeOff, LuFileCheck, LuMenu } from 'react-icons/lu';
+import { LuLockKeyhole, LuEyeOff, LuFileCheck, LuMenu, LuLock } from 'react-icons/lu';
 import { FaPlus } from 'react-icons/fa';
-import { useState } from 'react'; 
+import { useState, useRef } from 'react'; 
 import { useRouter } from 'next/navigation'; 
 
 export default function Home () {
 
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [stateToken, setStateToken] = useState<boolean>(false);
+
+  const refModal = useRef<HTMLDialogElement>(null);
 
   const router = useRouter();
 
@@ -29,7 +32,30 @@ export default function Home () {
     })
   }
 
+  function closeModal (pathLogin: boolean) {
+    if (pathLogin) {
+      refModal.current!.style.display = 'none';
+      refModal.current?.close()
+      router.push('/login')
+    } else {
+      refModal.current!.style.display = 'none';
+      refModal.current?.close()
+    }
+  }
+
+  function showModal() {
+    if (!stateToken) {
+      refModal.current!.close();
+      refModal.current!.style.display = 'flex';
+      refModal.current?.showModal();
+    } else {
+      //ir a section de erp
+    }
+  }
+
   useEffect(() => {
+
+    refModal.current!.style.display = 'none';
 
     AOS.init({
       duration: 1000, 
@@ -37,10 +63,56 @@ export default function Home () {
       once: false,
     })
 
-  }, [])
+    const token = localStorage.getItem('token');
+
+    async function getDataUser () {
+
+      try {
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/getDataUser`, {
+          method: 'GET',
+          headers: {
+            authorization: `Bearer ${token}`,
+            'content-type': 'application/json'
+          },
+        })
+
+        const data = await response.json();
+
+        if (response.status != 200 || data.message) {
+          setStateToken(false);
+          console.log(data.message)
+          return
+        }
+
+        console.log(data)
+
+        setStateToken(true);
+
+      } catch (error) {
+        console.log("Error in getDataUser: ", error)
+      }
+    }
+
+    getDataUser();
+
+  }, [stateToken])
 
   return (
     <>
+      <dialog ref={refModal} className='flex flex-col items-center m-auto w-[30%] text-center p-5 rounded-lg gap-6'>
+          <div className='flex p-3 rounded-2xl bg-[rgb(5,100,0)] w-fit border-1 text-white'>
+              <LuLock size={50} />
+          </div>
+          <div className='flex flex-col gap-1'>
+              <p className='text-xl font-bold'>Log in to continue.</p>
+              <p className='font-semibold'>For you security we closed your session, log in to continue manage your finances.</p>            
+          </div>
+          <div className='flex justify-between w-full gap-2'>
+              <button onClick={() => closeModal(true)} className='bg-[rgb(5,100,0)] cursor-pointer text-lg font-semibold p-2 rounded-sm w-[50%] text-white hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
+              <button onClick={() => closeModal(false)} className='border-1 border-black cursor-pointer text-lg font-semibold p-2 rounded-sm w-[50%] hover:bg-gray-200 active:scale-95'>Cancel</button>
+          </div>
+      </dialog>
       {/*--------------------------------------------------ORIGINAL MENU----------------------------------------------------*/}
       <header className='fixed flex flex-col md:flex-row items-start md:items-center justify-between bg-[rgb(250,255,250)] px-10 md:px-20 lg:px-30 py-5 md:py-1 w-full z-10'>
         <div onClick={() => scrollIntoViewPersonality("mainSection")} className='hidden md:flex items-center cursor-pointer gap-2'>
@@ -51,7 +123,10 @@ export default function Home () {
           <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
           <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
           <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
-          <button onClick={() => router.push('/signup')} className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
+          <button onClick={() => {
+            localStorage.removeItem('token');
+            router.push('/login');
+          }} className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>{stateToken ? 'Log out' : 'Log in'}</button>
         </div>
         {openMenu ? (
           <>
@@ -99,7 +174,7 @@ export default function Home () {
               <p className='text-[1.1rem] font-semibold'>Gather your accounts and see how much you have left at the end of the month.</p>
             </div>            
             <div className='flex justify-center md:justify-start'>
-              <button data-aos="zoom-in" className='font-semibold w-full md:w-[70%] lg:w-[50%] text-lg bg-[rgb(5,100,0)] text-white p-2 rounded-md cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Start...</button>
+              <button onClick={() => showModal()}  data-aos="zoom-in" className='font-semibold w-full md:w-[70%] lg:w-[50%] text-lg bg-[rgb(5,100,0)] text-white p-2 rounded-md cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Start...</button>
             </div>
           </div>
           <Image data-aos="zoom-out" className='p-1' src={grafica} width={700} height={700} alt='grafica'></Image>
