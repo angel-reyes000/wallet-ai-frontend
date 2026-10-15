@@ -14,10 +14,13 @@ import security from '@/public/images-home/escudo-sin-fondo.png';
 import { LuLockKeyhole, LuEyeOff, LuFileCheck, LuMenu } from 'react-icons/lu';
 import { FaPlus } from 'react-icons/fa';
 import { useState } from 'react'; 
+import { useRouter } from 'next/navigation'; 
 
 export default function Home () {
 
   const [openMenu, setOpenMenu] = useState<boolean>(false);
+
+  const router = useRouter();
 
   function scrollIntoViewPersonality (section: string) {
     document.getElementById(section)?.scrollIntoView({
@@ -48,7 +51,7 @@ export default function Home () {
           <p onClick={() => scrollIntoViewPersonality("sectionWork")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>How does it work</p>
           <p onClick={() => scrollIntoViewPersonality("sectionSecurity")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Security</p>
           <p onClick={() => scrollIntoViewPersonality("sectionPlans")} className='text-black px-5 py-3 rounded-md font-semibold cursor-pointer active:scale-95 hover:bg-[rgb(5,100,0)] hover:text-white'>Plans</p>
-          <button className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
+          <button onClick={() => router.push('/signup')} className='px-5 py-3 bg-[rgb(5,100,0)] text-white rounded-md font-semibold cursor-pointer hover:bg-[rgb(5,80,0)] active:scale-95'>Log in</button>
         </div>
         {openMenu ? (
           <>
@@ -115,7 +118,7 @@ export default function Home () {
               <p className='text-[1.1rem]'>Add as much balance as you want to manage, with no limits.</p>
             </div>
             <div data-aos="fade-right" className='flex flex-col gap-1'>
-              <Image src={step_3} width={400} height={400} className='rounded-2xl' alt='grafica ilustration'></Image>
+              <Image src={step_3} width={400} height={400} className='rounded-2xl' alt='grafic ilustration'></Image>
               <p className='text-[1.5rem] font-bold'>Manage and ajust</p>
               <p className='text-[1.1rem]'>Review and manage your expenses.</p>
             </div>
