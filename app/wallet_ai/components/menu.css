@@ -1,0 +1,129 @@
+.menu_animation_open {
+    animation-name: close_menu;
+    animation-duration: 100ms;
+    animation-delay: 0ms;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    
+    position: fixed;
+    width: fit-content;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px;
+    background-color: white;
+
+    .menu_header_and_sections {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+
+        .menu_header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+
+            .menu_icon {
+                display: block;
+            }
+
+            .menu_logo {
+                display: none;
+                align-items: center;
+                cursor: pointer;
+                gap: 10px;
+            }
+        }
+
+        .menu_sections {
+            display: none;
+            flex-direction: column;
+            color: black;
+            font-weight: 700;
+            gap: 10px;
+        }
+
+    }
+
+    .menu_letter_emailname {
+        display: none;
+        align-items: center;
+        border-top: 2px solid black;
+        padding: 10px;
+        gap: 10px;
+
+        .menu_letter {
+            width: fit-content;
+            padding: 8px 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: white;
+            border-radius: 150px;
+            background-color: rgb(5,100,0);
+        }
+
+        .menu_emailname {
+            font-weight: 600;
+        }
+    }
+}
+
+@keyframes close_menu {
+    from {
+        width: 300px;
+    } to {
+        width: 50px;
+    }
+}
+
+.menu_animation_open:hover {
+    animation-name: open_menu;
+    animation-duration: 100ms;
+    animation-delay: 0ms;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    padding: 30px;
+
+    .menu_header_and_sections {
+
+        .menu_header {
+
+            .menu_icon {
+                display: none;
+            }
+
+            .menu_logo {
+                display: flex;
+            }
+
+            img {
+                display: block;
+            }
+
+            p {
+                display: flex;
+            }
+
+        }
+
+        .menu_sections {
+            display: flex;
+        }
+
+    }
+
+    .menu_letter_emailname {
+        display: flex;
+
+    }
+}
+
+@keyframes open_menu {
+    from {
+        width: 50px;
+    } to {
+        width: 300px;
+    }
+}

@@ -49,7 +49,7 @@ export default function Home () {
       refModal.current!.style.display = 'flex';
       refModal.current?.showModal();
     } else {
-      //ir a section de erp
+      router.push("/wallet_ai");
     }
   }
 
