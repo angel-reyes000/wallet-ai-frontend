@@ -5,7 +5,7 @@ import Link from 'next/link';
 import logo from '@/public/images-home/wallet-ai-icono.png';
 import { FaHome } from 'react-icons/fa';
 import './menu.css';
-import { LuMenu } from 'react-icons/lu';
+import { LuMenu, LuArrowUpDown } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 
 export default function Menu () {
@@ -30,9 +30,9 @@ export default function Menu () {
                         <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <p className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
-                            <FaHome size={20} />Moviments
-                        </p>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <LuArrowUpDown size={20} />Transactions
+                        </Link>
                     </div>
                 </div>                
                 <div className='menu_letter_emailname'>
@@ -59,9 +59,9 @@ export default function Menu () {
                         <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <p className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
-                            <FaHome size={20} />Moviments
-                        </p>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <LuArrowUpDown size={20} />Transactions
+                        </Link>
                     </div>
                 </div>                
                 <div className='menu_letter_emailname'>
