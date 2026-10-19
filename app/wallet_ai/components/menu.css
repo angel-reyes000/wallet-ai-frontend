@@ -1,3 +1,4 @@
+/*---------------------------------------------------------MENU----------------------------------------------------------*/
 .menu_animation_open {
     animation-name: close_menu;
     animation-duration: 100ms;
@@ -125,5 +126,22 @@
         width: 50px;
     } to {
         width: 300px;
+    }
+}
+
+/*-------------------------------------------------------MESSSAGE-------------------------------------------------------*/
+.message_animation_view {
+    animation-name: view_message;
+    animation-duration: 0.5s;
+    animation-delay: 0ms;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes view_message {
+    from {
+        right: -300px;
+    } to {
+        right: 40px;
     }
 }
