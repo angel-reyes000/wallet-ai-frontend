@@ -5,15 +5,77 @@ import Link from 'next/link';
 import logo from '@/public/images-home/wallet-ai-icono.png';
 import { FaHome } from 'react-icons/fa';
 import './menu.css';
+import { FaTriangleExclamation } from 'react-icons/fa6';
 import { LuMenu, LuArrowUpDown } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState, useRef } from 'react';
+import { dataUser } from '@/app/schemas/schemas'; 
 
 export default function Menu () {
+    const [dataUser, setDataUser] = useState<dataUser>(); 
+
+    const refModal = useRef<HTMLDialogElement>(null);
 
     const router = useRouter();
 
+    useEffect(() => {
+        async function getDataUser () {
+
+            const token = localStorage.getItem('token');
+            refModal.current!.style.display = 'none';
+
+            try {
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/users/getDataUser`, {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/json',
+                        authorization: `Bearer ${token}`
+                    }
+                })
+
+                if (response.status != 200) {
+                    console.log("Session expired")
+                    refModal.current?.showModal();
+                    refModal.current!.style.display = 'flex';
+                    return
+                }
+
+                const data = await response.json()
+
+                setDataUser(data);
+
+            } catch (error) {
+                console.log("Error in getDataUser: ", error);
+            }
+        }
+
+        getDataUser();
+
+    }, [])
+
+    function redirectionLogin () {
+        router.push('/login');
+        refModal.current!.style.display = 'none';
+        refModal.current!.close();
+    }
+
     return (
         <>
+            <dialog ref={refModal} className='flex flex-col m-auto max-w-[50%] p-5 rounded-lg gap-2'>
+                <div className='flex items-center justify-center w-full'>
+                    <FaTriangleExclamation size={50} className='bg-black text-yellow-500 p-1 rounded-4xl' />
+                </div>
+                <div className='flex justify-between'>
+                    <p className='font-bold text-xl'>Session expired!</p>
+                </div>                
+                <div className='flex flex-row'>
+                    <button onClick={() => redirectionLogin()}
+                        className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer w-full hover:bg-[rgb(5,80,0)] active:scale-95'>
+                            Log in
+                    </button>
+                </div>
+            </dialog>
             {/*----------------------------------MENU ORIGINAL---------------------------------*/}
             <div className='menu_animation_open'>
                 <div className='menu_header_and_sections'>
@@ -36,10 +98,10 @@ export default function Menu () {
                     </div>
                 </div>                
                 <div className='menu_letter_emailname'>
-                    <p className='menu_letter'>A</p>
+                    <p className='menu_letter'>{dataUser?.username[0].toUpperCase()}</p>
                     <div className='menu_emailname'>
-                        <p>nombre</p>
-                        <p>correo</p>
+                        <p>{dataUser?.username}</p>
+                        <p>{dataUser?.email}</p>
                     </div>
                 </div>
             </div>
@@ -65,10 +127,10 @@ export default function Menu () {
                     </div>
                 </div>                
                 <div className='menu_letter_emailname'>
-                    <p className='menu_letter'>A</p>
+                    <p className='menu_letter'>{dataUser?.username[0].toUpperCase()}</p>
                     <div className='menu_emailname'>
-                        <p>nombre</p>
-                        <p>correo</p>
+                        <p>{dataUser?.username}</p>
+                        <p>{dataUser?.email}</p>
                     </div>
                 </div>
             </div>
