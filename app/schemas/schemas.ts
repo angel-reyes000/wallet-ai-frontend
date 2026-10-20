@@ -18,6 +18,7 @@ export interface Transaction {
     category: string
     type: string
     amount: number
+    user_id?: number
 }
 
 export interface Category {

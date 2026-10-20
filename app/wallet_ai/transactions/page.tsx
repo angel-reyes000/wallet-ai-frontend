@@ -207,6 +207,84 @@ export default function Transactions () {
         }
     }
 
+    async function updateTransaction () {
+
+        const token = localStorage.getItem('token');
+
+        try {
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/transactions/updateTransaction`, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({                    
+                    id: transaction.id,
+                    date: transaction.date,
+                    description: transaction.description,
+                    category: transaction.category,
+                    type: transaction.type,
+                    amount: transaction.amount,
+                })
+            })
+
+            const data = await response.json()
+            //console.log(data)
+
+            if (response.status != 200) {
+                console.log("Error in updateTransaction")
+                return
+            }
+
+            setDataTransactions(prev => prev.map(obj => obj.id == data.id ? {...prev,     
+                    id: data.id,             
+                    date: data.date,
+                    description: data.description,
+                    category: data.category,
+                    type: data.type,
+                    amount: data.amount,
+                } : obj))
+
+            closeModal("edit");
+
+        } catch (error) {
+            console.log("Error in updateTransaction: ", error)
+        }
+    }
+
+    async function deleteTransaction (transaction_id: number | undefined) {
+
+        const token = localStorage.getItem('token');
+
+        try {
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/transactions/deleteTransaction?transaction_id=${transaction_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'content-type': 'application/json',
+                    authorization: `Bearer ${token}`
+                }
+            })
+
+            const data = await response.json();
+
+            if (response.status != 200) {
+                console.log("Error in deleteTransaction")
+                return
+            }
+
+            //console.log(data);
+
+            setDataTransactions(prev => prev.filter(obj => obj.id !== data.id ? obj : null));
+
+            closeModal("edit");
+
+        } catch (error) {
+            console.log("Error in deleteTransaction: ", error)
+        }
+    }
+
     return (
         <>
             {/*--------------------------------------MODAL ADD-----------------------------------------------*/}
@@ -287,11 +365,11 @@ export default function Transactions () {
                     </label>
                 </div>
                 <div className='flex flex-row justify-between'>
-                    <button onClick={() => null} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer min-w-[40%] hover:bg-[rgb(5,80,0)] active:scale-95'>Edit</button>
+                    <button onClick={() => updateTransaction()} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer min-w-[40%] hover:bg-[rgb(5,80,0)] active:scale-95'>Edit</button>
                     <button onClick={() => closeModal("edit")} className='flex flex-row items-center justify-center p-2 rounded-lg text-black font-semibold border-2 border-gray-400 cursor-pointer min-w-[40%] hover:bg-gray-200 active:scale-95'>Cancel</button>
                 </div>
                 <div className='flex flex-row justify-end'>
-                    <button onClick={() => null} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-red-600 cursor-pointer w-fit hover:bg-red-600 active:scale-95'><FaTrash size={20} /></button>
+                    <button onClick={() => deleteTransaction(transaction.id)} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-red-600 cursor-pointer w-fit hover:bg-red-600 active:scale-95'><FaTrash size={20} /></button>
                 </div>
             </dialog>
             {stateMessage.active ? <Message message={stateMessage.message} type={stateMessage.type} /> : null}
