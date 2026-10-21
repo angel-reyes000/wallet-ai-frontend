@@ -26,6 +26,11 @@ export interface Category {
     category_name: string
 }
 
+export interface TotalToCategory {
+    name: string | undefined
+    value: number | undefined
+}
+
 export interface Type {
     id: number
     type_name: string
