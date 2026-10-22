@@ -50,7 +50,7 @@ export default function WalletAI () {
                 for (let i = 0; i < data.length; i++) {
                     let amount = data[i].amount
 
-                    if (data[i].date.split("-")[0] == currentYear) {
+                    //if (data[i].date.split("-")[0] == currentYear) {
                         switch ((data[i].date.split("-")[1])) {
                             case "01":
                                 totalMonths[0] += amount
@@ -89,7 +89,7 @@ export default function WalletAI () {
                                 totalMonths[11] += amount
                                 break;
                         }
-                    }                    
+                    //}                    
                 }
 
                 console.log(totalMonths)
@@ -138,7 +138,7 @@ export default function WalletAI () {
         <>
             <div className="flex flex-col h-full w-full p-10 gap-10">
                 <div onClick={() => console.log(listCategoryValue)}>
-                    <h1 className='font-bold text-4xl'>Resume {` (${currentYear})`}</h1>
+                    <h1 className='font-bold text-4xl'>Resume</h1>
                     <p>Analize visually the resume of yours accounts</p>
                 </div>                
                 <div className="w-full h-[300px]">
@@ -164,8 +164,8 @@ export default function WalletAI () {
                     </div>
                     <div>
                         <div className="flex flex-col px-3 py-1 gap-1">
-                            <h2 className="font-bold text-[1.6rem]">Last seven moviments</h2>
-                            <div className="flex flex-col">
+                            <h2 className="font-bold text-[1.6rem]">Last moviments</h2>
+                            <div className="flex flex-col overflow-y-scroll max-h-[400px]">
                                 <table>
                                     <thead>
                                         <tr className="bg-[rgb(0,100,0)] text-white">
@@ -175,7 +175,7 @@ export default function WalletAI () {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {transactions?.slice(0,7).toSorted((a, b) => a.date.localeCompare(b.date))?.map((obj) => (                                            
+                                        {transactions?.slice(0,10).toSorted((a, b) => a.date.localeCompare(b.date))?.map((obj) => (                                            
                                            <tr key={obj.id} className="text-center border-b-1 font-semibold hover:bg-gray-400">
                                                 <td className="p-2">{obj.category}</td>
                                                 <td className="p-2">{obj.type}</td>
