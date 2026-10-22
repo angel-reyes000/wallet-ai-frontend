@@ -22,7 +22,15 @@ export default function LineChartTotalMoney({ ListTotalBalance }: { ListTotalBal
         type: "line",
         smooth: true,
         areaStyle: {
-            opacity: 0.3
+            opacity: 0.3,
+            color: "rgb(0,100,0,0.5)",
+        },
+        lineStyle: {
+            color: "rgb(0,100,0)",
+            width: 3,
+        },
+        itemStyle: {
+            color: "rgb(0,80,0)",
         },
       },
     ],
