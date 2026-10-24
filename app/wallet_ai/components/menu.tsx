@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '@/public/images-home/wallet-ai-icono.png';
-import { FaHome } from 'react-icons/fa';
+import { FaHome, FaCalendarAlt } from 'react-icons/fa';
+import { FiSettings } from 'react-icons/fi';
 import './menu.css';
 import { FaTriangleExclamation } from 'react-icons/fa6';
 import { LuMenu, LuArrowUpDown } from 'react-icons/lu';
@@ -94,6 +95,12 @@ export default function Menu () {
                         </Link>
                         <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <LuArrowUpDown size={20} />Transactions
+                        </Link>
+                        <Link href={''} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <FaCalendarAlt size={20} />Recurring expenses
+                        </Link>
+                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <FiSettings size={20} />Configuration
                         </Link>
                     </div>
                 </div>                

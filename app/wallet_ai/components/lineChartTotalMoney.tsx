@@ -2,7 +2,7 @@
 
 import ReactECharts from "echarts-for-react";
 
-export default function LineChartTotalMoney({ ListTotalBalance }: { ListTotalBalance: Array<number> }) {
+export default function LineChartTotalMoney({ ListValuesLineChart, DataLabelsX }: { ListValuesLineChart: Array<number>, DataLabelsX: Array<number> }) {
   const options = {
     title: {
         text: "Total balance",
@@ -11,14 +11,14 @@ export default function LineChartTotalMoney({ ListTotalBalance }: { ListTotalBal
     },
     xAxis: {
       type: "category",
-      data: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+      data: DataLabelsX,
     },
     yAxis: {
       type: "value",
     },
     series: [
       {
-        data: ListTotalBalance,
+        data: ListValuesLineChart,
         type: "line",
         smooth: true,
         areaStyle: {
