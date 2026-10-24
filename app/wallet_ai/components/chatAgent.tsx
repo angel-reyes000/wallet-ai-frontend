@@ -23,37 +23,7 @@ export default function ChatAgent () {
                             </div>
                             <div className="flex justify-end">
                                 <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="p-2 bg-gray-300 w-[80%] rounded-md">Mensaje largo de chatbot para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="p-2 bg-gray-300 w-[80%] rounded-md">Mensaje largo de chatbot para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="p-2 bg-gray-300 w-[80%] rounded-md">Mensaje largo de chatbot para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="p-2 bg-gray-300 w-[80%] rounded-md">Mensaje largo de chatbot para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-start">
-                                <p className="p-2 bg-gray-300 w-[80%] rounded-md">Mensaje largo de chatbot para personalizarlo.</p>
-                            </div>
-                            <div className="flex justify-end">
-                                <p className="p-2 bg-gray-200 w-[80%] rounded-md bg-green-900 text-white">Mensaje largo de humano para personalizarlo.</p>
-                            </div>
+                            </div>                            
                         </div>
                     </div>
                     <div className="absolute bottom-0 flex items-center justify-between border-2 w-full max-h-[70px] bg-white p-1">
