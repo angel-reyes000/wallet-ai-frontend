@@ -19,8 +19,20 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
             show: false,
         },
         label: {
-            show: false,
+            show: true,
+            position: 'inside',
+            formatter: '${c}\n{d}%',
+            color: 'rgb(255, 255, 255)',
+            fontSize: 13,
+            fontWeight: 900 
         },
+        emphasis: {
+        label: {
+          show: true,
+          formatter: '${c}\n({d}%)',
+          color: 'rgb(255, 255, 255)'
+        }
+      },
         data: TotalCategoryValue,
       },
     ],

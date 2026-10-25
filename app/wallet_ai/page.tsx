@@ -8,7 +8,7 @@ import { Transaction, TotalToCategory } from "../schemas/schemas"
 import { filter } from "echarts/types/src/export/api/util.js"
 
 export default function WalletAI () {
-    const [transactions, setTransactions] = useState<Transaction[]>();
+    const [lastTransactions, setTransactions] = useState<Transaction[]>();
     const [totalBalance, setTotalBalance] = useState<number>(0);
     const [totalIncomes, setTotalIncomes] = useState<number>(0);
     const [totalExpenses, setTotalExpenses] = useState<number>(0);
@@ -107,7 +107,7 @@ export default function WalletAI () {
         async function getTotalToCategoryResume () {
             try {
 
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/categories/getTotalToCategory`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/categories/getGraphicCategories?month=${filterMonth}&year=${filterYear}`, {
                     method: 'GET',
                     headers: {
                         'content-type': 'application/json',
@@ -118,10 +118,10 @@ export default function WalletAI () {
                 const data = await response.json();
 
                 if (response.status != 200) {
-                    console.log("Erorr in getTransactionResume: ", data)
+                    console.log("Erorr in getTotalToCategoryResume: ", data)
                     return
                 }
-
+                //console.log("CATEGORIES: ", data)
                 setListCategoryValue(data);
 
             } catch (error) {
@@ -130,6 +130,33 @@ export default function WalletAI () {
         }
 
         getTotalToCategoryResume();
+
+        async function getLastTransactions () {
+            try {
+
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/transactions/getLastTransactions?month=${filterMonth}&year=${filterYear}`, {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/json',
+                        authorization: `Bearer ${token}`
+                    }
+                })
+
+                const data = await response.json();
+
+                if (response.status != 200) {
+                    console.log("Erorr in getLastTransactions: ", data)
+                    return
+                }
+                
+                setTransactions(data)
+
+            } catch (error) {
+                console.log("Error in getLastTransactions: ", error)
+            }
+        }
+
+        getLastTransactions();
         
     }, [filterAllTime, filterYear, filterMonth])
 
@@ -209,8 +236,8 @@ export default function WalletAI () {
                                             <th className="p-1">Amount</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {transactions?.slice(0,10).toSorted((a, b) => a.date.localeCompare(b.date))?.map((obj) => (                                            
+                                    <tbody className="overflow-y-scroll max-h-[200px]">
+                                        {lastTransactions?.map((obj) => (                                            
                                            <tr key={obj.id} className="text-center border-b-1 font-semibold hover:bg-gray-300">
                                                 <td className="p-2">{obj.category}</td>
                                                 <td className="p-2">{obj.type}</td>
