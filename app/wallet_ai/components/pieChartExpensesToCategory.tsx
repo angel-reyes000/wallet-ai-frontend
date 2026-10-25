@@ -9,7 +9,28 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
         text: "Total to category",
         left: "left",
         top: 0,
+        textStyle: {
+          color: "#ffffff",
+          fontWeight: "bold",
+          fontSize: 18,
+        },
     },
+    color: [
+      "#FF1744", // Rojo brillante
+      "#FF9100", // Naranja intenso
+      "#FFEA00", // Amarillo eléctrico
+      "#76FF03", // Verde lima
+      "#00E676", // Verde esmeralda
+      "#1DE9B6", // Turquesa
+      "#00E5FF", // Cian eléctrico
+      "#2979FF", // Azul brillante
+      "#651FFF", // Violeta intenso
+      "#D500F9", // Magenta
+      "#FF00A8", // Rosa neón
+      "#FF6D00", // Naranja fuego
+      "#AEEA00", // Lima amarillento
+      "#7C4DFF"  // Púrpura brillante
+    ],
     series: [
       {
         type: "pie",
@@ -24,15 +45,15 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
             formatter: '${c}\n{d}%',
             color: 'rgb(255, 255, 255)',
             fontSize: 13,
-            fontWeight: 900 
+            fontWeight: 900,
         },
         emphasis: {
-        label: {
-          show: true,
-          formatter: '${c}\n({d}%)',
-          color: 'rgb(255, 255, 255)'
-        }
-      },
+          label: {
+            show: true,
+            formatter: '${c}\n({d}%)',
+            color: 'rgb(255, 255, 255)'
+          }
+        },
         data: TotalCategoryValue,
       },
     ],
@@ -40,6 +61,10 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
         orient: "vertical",
         right: 30,
         top: "center",
+        textStyle: {
+          color: "#ffffff",
+          fontWeight: "bold",
+        },
     },
     grid: {
         left: 0,

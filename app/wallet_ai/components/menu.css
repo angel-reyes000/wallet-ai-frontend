@@ -13,7 +13,8 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 5px;
-    background-color: white;
+    background-color: rgb(3, 15, 0);
+    color: white;
 
     .menu_header_and_sections {
         display: flex;
@@ -41,7 +42,6 @@
         .menu_sections {
             display: none;
             flex-direction: column;
-            color: black;
             font-weight: 700;
             gap: 10px;
         }
@@ -51,7 +51,7 @@
     .menu_letter_emailname {
         display: none;
         align-items: center;
-        border-top: 2px solid black;
+        border-top: 2px solid white;
         padding: 10px;
         gap: 10px;
 
@@ -60,9 +60,8 @@
             padding: 8px 15px;
             font-size: 1.1rem;
             font-weight: 500;
-            color: white;
             border-radius: 150px;
-            background-color: rgb(5,100,0);
+            background-color: rgb(0,200,0);
         }
 
         .menu_emailname {

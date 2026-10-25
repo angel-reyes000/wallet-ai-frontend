@@ -167,17 +167,17 @@ export default function WalletAI () {
 
     return (
         <>
-            <div className="flex flex-col h-full w-full p-10 gap-10">
+            <div className="flex flex-col min-h-auto w-full p-10 pb-50 text-white gap-3">
                 <div className="flex justify-between">
                     <div>
                         <h1 className='font-bold text-4xl'>Resume</h1>
                         <p>Analize visually the resume of yours accounts</p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center bg-[rgb(0,15,0)] p-5 rounded-xl gap-3">
                         <span className="text-lg font-bold">Filter to:</span>
                         <label className="flex items-center gap-1 border-2 border-gray-400 rounded-sm px-1">
                             <span className="font-semibold">Month:</span>
-                            <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)} className="p-1 focus:outline-0">
+                            <select value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)} className="p-1 focus:outline-0" style={{backgroundColor: 'black', color: 'rgb(0,200,0)'}}>
                                 <option value="">NA</option>
                                 <option value="1">January</option>
                                 <option value="2">February</option>
@@ -197,56 +197,54 @@ export default function WalletAI () {
                             <span className="font-semibold">Year:</span>
                             <input value={filterYear} onChange={(e) => setFilterYear(e.target.value)} 
                                 type="number" min={2000} 
-                                className="p-1 focus:outline-0">
+                                className="p-1 focus:outline-0" style={{backgroundColor: 'black', color: 'rgb(0,200,0)'}}>
                             </input>
                         </label>                        
-                        <button onClick={() => activeFilterAllTime()} className="px-5 py-1 text-white font-bold cursor-pointer bg-[rgb(0,100,0)] active:scale-95">All time</button>                    
+                        <button onClick={() => activeFilterAllTime()} className="px-5 py-1 text-white font-bold cursor-pointer bg-[rgb(0,200,0)] active:scale-95">All time</button>                    
                     </div>
                 </div>                
-                <div className="w-full h-[300px]">
+                <div className="w-full h-[300px] bg-[rgb(0,15,0)] p-5 rounded-xl">
                     <LineChartTotalMoney ListValuesLineChart={listValuesLineChart!} DataLabelsX={dataLabelsX!} />
                 </div>
-                <div className="flex justify-between bg-yellow-100 gap-3">
-                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md bg-gray-100">
+                <div className="flex justify-between bg-[rgb(0,15,0)] p-5 rounded-xl gap-3">
+                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total balance</p>
                         <p className="font-semibold">{totalBalance}</p>
                     </div>
-                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md bg-gray-100">
+                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total Incomes</p>
-                        <p className="font-semibold">{totalIncomes}</p>
+                        <p className="font-semibold text-[rgb(0,200,0)]">{totalIncomes}</p>
                     </div>
-                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md bg-gray-100">
+                    <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total expenses</p>
-                        <p className="font-semibold">{totalExpenses}</p>
+                        <p className="font-semibold text-[rgb(255,0,0)]">{totalExpenses}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-[1fr_1fr] h-[400px]">
-                    <div className="w-full h-full bg-yellow-100">
+                <div className="grid grid-cols-[1fr_1fr] h-[400px] gap-5">
+                    <div className="w-full h-full bg-[rgb(0,15,0)] p-5 rounded-xl">
                         <PieChartExpensesToCategory TotalCategoryValue={listCategoryValue} />
                     </div>
-                    <div>
-                        <div className="flex flex-col px-3 py-1 gap-1">
-                            <h2 className="font-bold text-[1.6rem]">Last moviments</h2>
-                            <div className="flex flex-col overflow-y-scroll max-h-[400px]">
-                                <table>
-                                    <thead>
-                                        <tr className="bg-[rgb(0,100,0)] text-white">
-                                            <th className="p-1">Category</th>
-                                            <th className="p-1">Type</th>
-                                            <th className="p-1">Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="overflow-y-scroll max-h-[200px]">
-                                        {lastTransactions?.map((obj) => (                                            
-                                           <tr key={obj.id} className="text-center border-b-1 font-semibold hover:bg-gray-300">
-                                                <td className="p-2">{obj.category}</td>
-                                                <td className="p-2">{obj.type}</td>
-                                                <td className="p-2">{obj.amount}</td>
-                                            </tr>  
-                                        ))}                                                                              
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div className="flex flex-col bg-[rgb(0,15,0)] p-5 rounded-xl gap-1">
+                        <h2 className="font-bold text-[1.6rem]">Last moviments</h2>
+                        <div className="flex flex-col overflow-y-scroll max-h-[400px]">
+                            <table>
+                                <thead>
+                                    <tr className="bg-[rgb(0,200,0)] text-white">
+                                        <th className="p-1">Category</th>
+                                        <th className="p-1">Type</th>
+                                        <th className="p-1">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="overflow-y-scroll max-h-[200px]">
+                                    {lastTransactions?.map((obj) => (                                            
+                                        <tr key={obj.id} className="text-center border-b-1 font-semibold hover:bg-black hover:text-[rgb(0,200,0)]">
+                                            <td className="p-2">{obj.category}</td>
+                                            <td className="p-2">{obj.type}</td>
+                                            <td className="p-2">{obj.amount}</td>
+                                        </tr>  
+                                    ))}                                                                              
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
