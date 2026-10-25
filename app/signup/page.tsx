@@ -81,7 +81,7 @@ export default function SignUp () {
                             </label>
                             <label className='flex flex-col'>
                                 <span className='font-semibold'>Password:</span>
-                                <input onChange={(e) => setUser({...user, password: e.target.value})} placeholder='Thebestpageaboutofpersonalfinances' className='border-2 border-gray-400 rounded-sm p-2'></input>
+                                <input type="password" onChange={(e) => setUser({...user, password: e.target.value})} placeholder='Thebestpageaboutofpersonalfinances' className='border-2 border-gray-400 rounded-sm p-2'></input>
                                 <span className='text-gray-600 text-[0.9rem]'>Minimum 8 characters</span>
                             </label>
                         </div>                        
