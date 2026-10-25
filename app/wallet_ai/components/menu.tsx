@@ -86,20 +86,20 @@ export default function Menu () {
                         </div>      
                         <div onClick={() => router.push('/')} className='menu_logo'>
                             <Image src={logo} width={40} height={40} alt='logo'></Image>
-                            <p className='flex text-black text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-green-200 bg-clip-text text-transparent'>AI</span></p>                      
+                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-[rgb(0,255,0)] bg-clip-text text-transparent'>AI</span></p>                      
                         </div>                  
                     </div>
                     <div className='menu_sections'>
-                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <LuArrowUpDown size={20} />Transactions
                         </Link>
-                        <Link href={''} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={''} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FaCalendarAlt size={20} />Recurring expenses
                         </Link>
-                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FiSettings size={20} />Configuration
                         </Link>
                     </div>
@@ -121,15 +121,21 @@ export default function Menu () {
                         </div>      
                         <div onClick={() => router.push('/')} className='menu_logo'>
                             <Image src={logo} width={40} height={40} alt='logo'></Image>
-                            <p className='flex text-black text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-green-200 bg-clip-text text-transparent'>AI</span></p>                      
+                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-[rgb(0,255,0)] bg-clip-text text-transparent'>AI</span></p>                      
                         </div>                  
                     </div>
                     <div className='menu_sections'>
-                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(5,100,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
                             <LuArrowUpDown size={20} />Transactions
+                        </Link>
+                        <Link href={''} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <FaCalendarAlt size={20} />Recurring expenses
+                        </Link>
+                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                            <FiSettings size={20} />Configuration
                         </Link>
                     </div>
                 </div>                

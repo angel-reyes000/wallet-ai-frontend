@@ -8,13 +8,32 @@ export default function LineChartTotalMoney({ ListValuesLineChart, DataLabelsX }
         text: "Total balance",
         left: "left",
         top: 0,
+        textStyle: {
+          color: "#ffffff",
+          fontWeight: "bold",
+        },
     },
     xAxis: {
       type: "category",
       data: DataLabelsX,
+      axisLabel: {
+        color: "#ffffff",
+      },
     },
     yAxis: {
       type: "value",
+      axisLabel: {
+        color: "rgb(0,200,0)",
+      },
+    },
+    tooltip: {
+      trigger: "axis",
+      backgroundColor: "black",
+      borderColor: "rgb(0,200,0)",
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+      },
     },
     series: [
       {
@@ -23,14 +42,14 @@ export default function LineChartTotalMoney({ ListValuesLineChart, DataLabelsX }
         smooth: true,
         areaStyle: {
             opacity: 0.3,
-            color: "rgb(0,100,0,0.5)",
+            color: "rgba(0,255,0,0.5)",
         },
         lineStyle: {
-            color: "rgb(0,100,0)",
+            color: "rgb(0, 255, 0)",
             width: 3,
         },
         itemStyle: {
-            color: "rgb(0,80,0)",
+            color: "rgb(0, 255, 0)",
         },
       },
     ],
