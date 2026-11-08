@@ -9,6 +9,7 @@ export interface User {
 export interface dataUser {
     username: string
     email: string
+    created_at?: string
 }
 
 export interface Transaction {
@@ -44,4 +45,16 @@ export interface StateMessage {
     active: boolean
     message: string
     type: MessageType
+}
+
+export interface AppConfiguration {
+    backgroundColor: boolean
+    temperature: number
+}
+
+export interface Messages {
+    id: number
+    role: string
+    message: string
+    user_id?: number
 }
