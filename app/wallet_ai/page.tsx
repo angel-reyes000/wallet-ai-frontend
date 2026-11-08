@@ -167,8 +167,8 @@ export default function WalletAI () {
 
     return (
         <>
-            <div className="flex flex-col min-h-auto w-full p-10 pb-50 text-white gap-3">
-                <div className="flex justify-between">
+            <div className="grid grid-cols-[1fr] p-10 pb-50 text-white gap-3">
+                <div className="flex flex-col lg:flex-row justify-between gap-5 lg:gap-2">
                     <div>
                         <h1 className='font-bold text-4xl'>Resume</h1>
                         <p>Analize visually the resume of yours accounts</p>
@@ -220,7 +220,7 @@ export default function WalletAI () {
                         <p className="font-semibold text-[rgb(255,0,0)]">{totalExpenses}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-[1fr_1fr] h-[400px] gap-5">
+                <div className="flex flex-col lg:flex-row h-[400px] gap-5">
                     <div className="w-full h-full bg-[rgb(0,15,0)] p-5 rounded-xl">
                         <PieChartExpensesToCategory TotalCategoryValue={listCategoryValue} />
                     </div>
