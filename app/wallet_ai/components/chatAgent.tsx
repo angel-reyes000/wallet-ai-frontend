@@ -13,6 +13,7 @@ export default function ChatAgent () {
     const [openChat, setOpenChat] = useState<boolean>(false);
     const [messages, setMessages] = useState<Messages[]>([]);
     const [inputMessage, setInputMessage] = useState<string>("");
+    const [thinking, setThinking] = useState<boolean>(false);
 
     const lastMessage = useRef<HTMLDivElement>(null)
 
@@ -65,14 +66,15 @@ export default function ChatAgent () {
     async function postMessage () {
         const token = localStorage.getItem("token");
 
-        console.log("MSAGE: ", inputMessage)
         const message = inputMessage
         let id = Date.now();
-        console.log("IDDD: ", id)
+
         setInputMessage("")
-        setMessages([...messages, {"id": id, "role": "user", "message": message}])
+        setMessages([...messages, {"id": id, "role": "user", "message": message}])        
 
         try {
+
+            setThinking(true);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/agent/postMessage`, {
                 method: 'POST',
@@ -88,7 +90,7 @@ export default function ChatAgent () {
             const data = await response.json()
 
             if (response.status != 200) {
-                console.log("Error to post message: ", data.detail)             
+                console.log("Error to post message: ", data.detail)   
             }
 
             console.log("MESSAGE POST: ", data)
@@ -97,6 +99,8 @@ export default function ChatAgent () {
 
         } catch (error) {
             console.log("Error in postMessages", error)
+        } finally {
+            setThinking(false)
         }
     }
 
@@ -104,12 +108,12 @@ export default function ChatAgent () {
         <>
             <div className="fixed right-10 bottom-10">
                 <div className={"relative flex justify-start bg-white w-[400px] h-[600px]" + (openChat ? ' flex ' : ' hidden ')}>
-                    <div className="w-full overflow-y-scroll">
+                    <div className="overflow-y-scroll">
                         <div className="absolute flex items-center justify-start w-full bg-[rgb(0,200,0)] text-white p-2 font-semibold text-[1.1rem] gap-2">
                             <h2>Agent support</h2>
                             <MdSupportAgent size={25} />
                         </div>                        
-                        <div className="flex flex-col px-2 pt-15 pb-20 gap-4">
+                        <div className="flex flex-col px-2 pt-15 pb-20 bg-[rgb(0,30,0)] gap-4">
                             {messages?.map(message => message.role === "user" ? 
                             (
                                 <div key={message?.id} className="flex justify-end">
@@ -119,12 +123,13 @@ export default function ChatAgent () {
                                 <div key={message?.id} className="p-2 bg-gray-300 w-[80%] rounded-md">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]} >{message.message}</ReactMarkdown>
                                 </div>
-                            ))}                                                                                                                
-                        </div>
+                            ))}              
+                            {thinking ? <p className="p-2 bg-gray-300 w-[30%] rounded-md">Thinking...</p> : null}                                                                                                  
+                        </div>                        
                         <div ref={lastMessage} />
                     </div>
-                    <div className="absolute bottom-0 flex items-center justify-between w-[95%] max-h-[70px] bg-gray-300 p-1">
-                        <input value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Write..." className="focus:outline-0 w-[75%] p-2"></input>
+                    <div className="absolute bottom-0 flex items-center justify-between w-[96%] h-auto bg-gray-300 p-1">
+                        <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Write..." className="focus:outline-0 w-[80%] min-h-[70px] max-h-[80px] p-2"></textarea>
                         <button onClick={() => postMessage()} className="flex items-center justify-end p-3 rounded-3xl bg-[rgb(0,200,0)] cursor-pointer text-white active:scale-95">
                             <FiSend size={30} className="w-fit"/>
                         </button>

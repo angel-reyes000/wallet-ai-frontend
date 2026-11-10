@@ -58,3 +58,13 @@ export interface Messages {
     message: string
     user_id?: number
 }
+
+export interface Card {
+    id?: number
+    name: string
+    type: string
+    last_numbers: string
+    color: string
+    expired_date: string
+    created_at: string
+}

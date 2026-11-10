@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fullcalendar/react": "^7.1.4",
     "aos": "^2.3.4",
     "echarts": "^6.1.0",
     "echarts-for-react": "^3.0.6",
@@ -17,7 +18,8 @@
     "react-dom": "19.3.0",
     "react-icons": "^5.7.0",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "temporal-polyfill": "^1.0.8"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
