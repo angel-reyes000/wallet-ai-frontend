@@ -64,6 +64,7 @@ export interface Card {
     name: string
     type: string
     last_numbers: string
+    background_color: string
     color: string
     expired_date: string
     created_at: string
