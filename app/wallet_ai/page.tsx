@@ -239,7 +239,7 @@ export default function WalletAI () {
                                     {lastTransactions?.map((obj) => (                                            
                                         <tr key={obj.id} className="text-center border-b-1 font-semibold hover:bg-black hover:text-[rgb(0,200,0)]">
                                             <td className="p-2">{obj.category}</td>
-                                            <td className="p-2">{obj.type}</td>
+                                            <td className="p-2">{obj.card}</td>
                                             <td className="p-2">{obj.amount}</td>
                                         </tr>  
                                     ))}                                                                              

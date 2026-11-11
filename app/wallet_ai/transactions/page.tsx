@@ -2,7 +2,7 @@
 
 import { FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import { useEffect, useRef, useState } from 'react'
-import { Transaction, Category, Type, ModalModes, StateMessage } from '@/app/schemas/schemas';
+import { Transaction, Category, Card, ModalModes, StateMessage } from '@/app/schemas/schemas';
 import Message from '../components/message';
 
 export default function Transactions () {
@@ -12,11 +12,11 @@ export default function Transactions () {
         date: "",
         description: "",
         category: "Food",
-        type: "Cash",
+        card: "Cash",
         amount: 0,
     });
     const [categories, setCategories] = useState<Category[]>();
-    const [types, setTypes] = useState<Type[]>();
+    const [cards, setCards] = useState<Card[]>();
 
     const refModalAdd = useRef<HTMLDialogElement>(null);
     const refModalEdit = useRef<HTMLDialogElement>(null);
@@ -44,7 +44,7 @@ export default function Transactions () {
                 date: "",
                 description: "",
                 category: "Food",
-                type: "Cash",
+                card: "Cash",
                 amount: 0,
             })
 
@@ -69,7 +69,7 @@ export default function Transactions () {
             date: "",
             description: "",
             category: "Food",
-            type: "Cash",
+            card: "Cash",
             amount: 0,
         })
     }
@@ -158,32 +158,33 @@ export default function Transactions () {
 
         getCategories()
 
-        async function getTypes () {
+        async function getCards () {
             try {
 
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/types/getTypes`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/cards/getCards`, {
                     method: 'GET',
                     headers: {
                         'content-type': 'application/json',
+                        'authorization': `Bearer ${token}`,
                     }
                 })
 
                 if (response.status != 200) {
-                    console.log("Error in getTypes frontend.")
+                    console.log("Error in getCards frontend.")
                     return
                 }
 
                 const data = await response.json();
-                //console.log(data)
+                console.log(data)
 
-                setTypes(data)
+                setCards(data)
 
             } catch (error) {
-                console.log("Error in getTypes: ", error)
+                console.log("Error in getCards: ", error)
             }
         }
 
-        getTypes()
+        getCards()
 
     }, [])
 
@@ -203,7 +204,7 @@ export default function Transactions () {
                     date: transaction.date,
                     description: transaction.description,
                     category: transaction.category,
-                    type: transaction.type,
+                    card: transaction.card,
                     amount: transaction.amount,
                 })
             })
@@ -225,7 +226,7 @@ export default function Transactions () {
                 date: "",
                 description: "",
                 category: "Food",
-                type: "Cash",
+                card: "Cash",
                 amount: 0,
             })
 
@@ -253,7 +254,7 @@ export default function Transactions () {
                     date: transaction.date,
                     description: transaction.description,
                     category: transaction.category,
-                    type: transaction.type,
+                    card: transaction.card,
                     amount: transaction.amount,
                 })
             })
@@ -271,7 +272,7 @@ export default function Transactions () {
                     date: data.date,
                     description: data.description,
                     category: data.category,
-                    type: data.type,
+                    card: data.card,
                     amount: data.amount,
                 } : obj))
 
@@ -337,9 +338,10 @@ export default function Transactions () {
                     </label>
                     <label className='flex flex-col w-full'>
                         <span className='font-semibold'>Type:</span>
-                        <select value={transaction?.type} onChange={(e) => setTransaction(obj => ({...obj, type: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
-                            {types?.map(obj => (
-                                <option key={obj.id}>{obj.type_name}</option>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                            <option>Cash</option>
+                            {cards?.map(obj => (
+                                <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
                     </label>
@@ -378,9 +380,10 @@ export default function Transactions () {
                     </label>
                     <label className='flex flex-col w-full'>
                         <span className='font-semibold'>Type:</span>
-                        <select value={transaction?.type} onChange={(e) => setTransaction(obj => ({...obj, type: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
-                            {types?.map(obj => (
-                                <option key={obj.id}>{obj.type_name}</option>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                            <option>Cash</option>
+                            {cards?.map(obj => (
+                                <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
                     </label>
@@ -439,7 +442,7 @@ export default function Transactions () {
                                 obj.date.toLowerCase().includes(inputSearch.toLowerCase()) || 
                                 obj.description.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.category.toLowerCase().includes(inputSearch.toLowerCase()) ||
-                                obj.type.toLowerCase().includes(inputSearch.toLowerCase()) ||
+                                obj.card.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 String(obj.amount).toLowerCase().includes(inputSearch.toLowerCase())                           
                             ).toSorted((a, b) => dateFilter(a.date, b.date)).sort((a, b) => typeFilters(String(a.amount), String(b.amount)))
                             .map(obj => (
@@ -447,7 +450,7 @@ export default function Transactions () {
                                     <td className='p-3'>{obj.date}</td>
                                     <td className='p-3'>{obj.description}</td>
                                     <td className='p-3'>{obj.category}</td>
-                                    <td className='p-3'>{obj.type}</td>
+                                    <td className='p-3'>{obj.card}</td>
                                     <td className='p-3'>{obj.amount}</td>
                                 </tr>
                             ))}                            
