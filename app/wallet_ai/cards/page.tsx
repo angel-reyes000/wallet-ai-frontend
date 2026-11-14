@@ -43,7 +43,7 @@ export default function Cards () {
                     console.log("Error to get cards.")
                 }
 
-                setCards(data);
+                setCards(Array.isArray(data) ? data: []);
                 console.log(data);
 
             } catch (error) {
@@ -189,8 +189,8 @@ export default function Cards () {
                             <label className="flex font-semibold text-[1.1rem] gap-1">
                                 <span>Type:</span>
                                 <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})}>
-                                    <option>Credit</option>
-                                    <option>Debit</option>
+                                    <option value={'Credit'}>Credit</option>
+                                    <option value={'Debit'}>Debit</option>
                                 </select>
                             </label>
                         </div>
@@ -277,7 +277,7 @@ export default function Cards () {
                                         <p>{card.type}</p>  
                                     </label>
                                     <label className="flex gap-1">
-                                        <span className="font-semibold">last_Numbers:</span>
+                                        <span className="font-semibold">Last four digits</span>
                                         <p>{card.last_numbers}</p>
                                     </label>
                                     <label className="flex gap-1">
@@ -334,13 +334,13 @@ export default function Cards () {
                                     </label>
                                     <label className="flex gap-1">
                                         <span className="font-semibold">Type:</span>
-                                        <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})}>
-                                            <option value="credit">Credit</option>
-                                            <option value="credit">Credit</option>
+                                        <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})} className="bg-black">
+                                            <option value={'Credit'}>Credit</option>
+                                            <option value={'Debit'}>Debit</option>
                                         </select>                                                                                                               
                                     </label>
                                     <label className="flex gap-1">
-                                        <span className="font-semibold">last_Numbers:</span>                                    
+                                        <span className="font-semibold">Last four digits:</span>                                    
                                         <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="focus:outline-0 border-b-1"></input>
                                     </label>
                                     <label className="flex gap-1">

@@ -114,15 +114,15 @@ export default function Transactions () {
                     }
                 })
 
-                if (response.status != 200) {
+                if (response.status !== 200) {
                     console.log("Error in getTransactions frontend.")
                     return
                 }
 
                 const data = await response.json()
-                //console.log(data)
+                console.log(data)
 
-                setDataTransactions(data);
+                setDataTransactions(Array.isArray(data) ? data : []);
 
             } catch (error) {
                 console.log("Error in getTransactions: ", error)
@@ -406,7 +406,7 @@ export default function Transactions () {
             </dialog>
             {/* {stateMessage.active ? <Message message={stateMessage.message} type={stateMessage.type} /> : null} */}
             <div className="flex flex-col p-10 w-full text-white gap-4">
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-col md:flex-row justify-between gap-5">
                     <h1 className='font-bold text-4xl'>Transactions</h1>
                     <div className='flex flex-row items-center gap-5'>
                         <div className='flex flex-row items-center border-3 border-gray-300 p-2 rounded-lg bg-[rgb(0,15,0)] gap-2'>
@@ -419,7 +419,7 @@ export default function Transactions () {
                         </button>
                     </div>
                 </div>
-                <div className='flex flex-col bg-[rgb(0,15,0)] rounded-lg p-5 gap-5'>
+                <div className='flex flex-col bg-[rgb(0,15,0)] rounded-lg p-5 w-full gap-5'>
                     <div className='flex items-center gap-1'>
                         <p className='text-lg font-bold'>Order by:</p>
                         <button value={String(filters.all)} onClick={(e) => setFilters({all: !filters.all, incomes: false, expenses: false, date: filters.date})} className={'py-1 border-2 border-gray-400 min-w-[100px] font-semibold rounded-sm cursor-pointer active:scale-95' + (filters.all ? ' text-white bg-[rgb(0,200,0)] hover:bg-[rgb(0,120,0)] ' : ' hover:bg-[rgb(0,120,0)] ')}>All</button>
@@ -443,6 +443,7 @@ export default function Transactions () {
                                 obj.description.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.category.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.card.toLowerCase().includes(inputSearch.toLowerCase()) ||
+                                obj.type?.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 String(obj.amount).toLowerCase().includes(inputSearch.toLowerCase())                           
                             ).toSorted((a, b) => dateFilter(a.date, b.date)).sort((a, b) => typeFilters(String(a.amount), String(b.amount)))
                             .map(obj => (
@@ -450,7 +451,7 @@ export default function Transactions () {
                                     <td className='p-3'>{obj.date}</td>
                                     <td className='p-3'>{obj.description}</td>
                                     <td className='p-3'>{obj.category}</td>
-                                    <td className='p-3'>{obj.card}</td>
+                                    <td className='p-3'>{obj.card} ({obj.type})</td>
                                     <td className='p-3'>{obj.amount}</td>
                                 </tr>
                             ))}                            

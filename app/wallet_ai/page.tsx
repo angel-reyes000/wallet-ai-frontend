@@ -1,11 +1,11 @@
 "use client"
 
-import LineChartTotalMoney from "./components/lineChartTotalMoney"
-import PieChartExpensesToCategory from "./components/pieChartExpensesToCategory"
+import LineChartTotalMoney from "./components/graphics/lineChartTotalMoney"
+import PieChartExpensesToCategory from "./components/graphics/pieChartExpensesToCategory"
 import { FaShop } from "react-icons/fa6"
 import { act, useEffect, useState } from "react"
-import { Transaction, TotalToCategory } from "../schemas/schemas"
-import { filter } from "echarts/types/src/export/api/util.js"
+import { Transaction, TotalToCategory, ListCardsBarChart } from "../schemas/schemas"
+import BarChartTotalTypes from '@/app/wallet_ai/components/graphics/barChartTotalTypes';
 
 export default function WalletAI () {
     const [lastTransactions, setTransactions] = useState<Transaction[]>();
@@ -19,6 +19,7 @@ export default function WalletAI () {
     const [dataLabelsX, setDataLabelsX] = useState();
     const [listValuesLineChart, setListValuesLineChart] = useState();
     const [errorFilter, setErrorFilter] = useState<string>("");
+    const [listCardsBarChart, setListCardsBarChart] = useState<ListCardsBarChart[]>();
 
 
     useEffect(() => {
@@ -60,9 +61,6 @@ export default function WalletAI () {
 
                 setListValuesLineChart(data[0] ?? [])
                 setDataLabelsX(data[1] ?? [])
-
-                //console.log("GRIFICALINEAS", data[0])
-                //console.log("GRIFICALINEAS", data[1])
                 
             } catch (error) {
                 console.log("Error in getTransactionResume: ", error)
@@ -149,7 +147,7 @@ export default function WalletAI () {
                     return
                 }
                 
-                setTransactions(data)
+                setTransactions(Array.isArray(data) ? data : [])
 
             } catch (error) {
                 console.log("Error in getLastTransactions: ", error)
@@ -157,6 +155,37 @@ export default function WalletAI () {
         }
 
         getLastTransactions();
+
+        async function getTotalCardsBarChart () {
+
+            const token = localStorage.getItem('token')
+
+            try {
+                
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/cards/getTotalCardsBarChart?year=${filterYear}&month=${filterMonth}`, {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/json',
+                        authorization: `Bearer ${token}`
+                    }
+                })
+
+                const data = await response.json();
+
+                if (response.status != 200) {
+                    console.log("Error to getTotalCardsBarChart.")
+                }
+
+                setListCardsBarChart(data)
+                console.log("CAAARDSSS: ", data);
+
+            } catch (error) {
+                console.log("Error in getTotalCardsBarChart: ", error)
+            }
+        }
+
+        getTotalCardsBarChart();
+
         
     }, [filterAllTime, filterYear, filterMonth])
 
@@ -167,13 +196,13 @@ export default function WalletAI () {
 
     return (
         <>
-            <div className="grid grid-cols-[1fr] p-10 pb-50 text-white gap-3">
+            <div className="flex flex-col w-dvw p-10 pb-50 text-white gap-3">
                 <div className="flex flex-col lg:flex-row justify-between gap-5 lg:gap-2">
                     <div>
                         <h1 className='font-bold text-4xl'>Resume</h1>
                         <p>Analize visually the resume of yours accounts</p>
                     </div>
-                    <div className="flex items-center bg-[rgb(0,15,0)] p-5 rounded-xl gap-3">
+                    <div className="flex flex-col md:flex-row items-center bg-[rgb(0,15,0)] p-5 rounded-xl gap-3">
                         <span className="text-lg font-bold">Filter to:</span>
                         <label className="flex items-center gap-1 border-2 border-gray-400 rounded-sm px-1">
                             <span className="font-semibold">Month:</span>
@@ -248,6 +277,83 @@ export default function WalletAI () {
                         </div>
                     </div>
                 </div>
+                <div className="flex flex-col bg-[rgb(0,15,0)] p-5 rounded-xl gap-2">
+                    <h2 className="font-bold text-[1.6rem]">Total to type</h2> 
+                    <div className="flex flex-col gap-10">
+                        <BarChartTotalTypes listCardsBarChart={listCardsBarChart!} />
+                        <div className="flex flex-col gap-2">
+                            <div className="flex bg-gray-900 p-3 gap-2">
+                                <div className="bg-blue-700 h-[80px] w-[160px] p-2 rounded-xl">
+                                    <p className="font-semibold text-[1.5rem]">Credit card</p>
+                                </div>
+                                <div className="flex justify-around w-full">
+                                    <div className="font-bold">
+                                        <p>Total money: </p>
+                                        <p>17627.090</p>
+                                    </div>   
+                                    <div className="font-bold">
+                                        <p>Total moviments: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total incomes: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total expenses: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                </div>                                                        
+                            </div>
+                            <div className="flex bg-gray-900 p-3 gap-2">
+                                <div className="bg-red-700 h-[80px] w-[160px] p-2 rounded-xl">
+                                    <p className="font-semibold text-[1.5rem]">Debit card</p>
+                                </div>
+                                <div className="flex justify-around w-full">
+                                    <div className="font-bold">
+                                        <p>Total money: </p>
+                                        <p>17627.090</p>
+                                    </div>   
+                                    <div className="font-bold">
+                                        <p>Total moviments: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total incomes: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total expenses: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                </div>                                                        
+                            </div>
+                            <div className="flex bg-gray-900 p-3 gap-2">
+                                <div className="bg-green-500 h-[80px] w-[160px] p-2 rounded-xl">
+                                    <p className="font-semibold text-[1.5rem]">Cash</p>
+                                </div>
+                                <div className="flex justify-around w-full">
+                                    <div className="font-bold">
+                                        <p>Total money: </p>
+                                        <p>17627.090</p>
+                                    </div>   
+                                    <div className="font-bold">
+                                        <p>Total moviments: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total incomes: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                    <div className="font-bold">
+                                        <p>Total expenses: </p>
+                                        <p>17627.090</p>
+                                    </div>
+                                </div>                                                        
+                            </div>
+                        </div>
+                    </div>                    
+                </div>                    
             </div>
         </>
     )

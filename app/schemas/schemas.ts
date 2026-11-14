@@ -20,6 +20,7 @@ export interface Transaction {
     card: string
     amount: number
     user_id?: number
+    type?: string
 }
 
 export interface Category {
@@ -68,4 +69,10 @@ export interface Card {
     color: string
     expired_date: string
     created_at: string
+}
+
+export interface ListCardsBarChart {
+    card: string
+    background_color: string
+    total: number
 }
