@@ -7,6 +7,7 @@ import { FiSend } from "react-icons/fi";
 import { Messages } from "@/app/schemas/schemas";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import '../../styles/styles.css';
 
 export default function ChatAgent () {
 
@@ -16,6 +17,7 @@ export default function ChatAgent () {
     const [thinking, setThinking] = useState<boolean>(false);
 
     const lastMessage = useRef<HTMLDivElement>(null)
+    const refTextArea = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
 
@@ -43,7 +45,7 @@ export default function ChatAgent () {
                     console.log("Error to get messages front.")
                 }
 
-                setMessages(data)                
+                setMessages(Array.isArray(data) ? data : [])                
 
             } catch (error) {
                 console.log("Error in getMessages", error)
@@ -108,13 +110,13 @@ export default function ChatAgent () {
         <>
             <div className="fixed right-10 bottom-10">
                 <div className={"relative flex justify-start bg-white w-[400px] h-[600px]" + (openChat ? ' flex ' : ' hidden ')}>
-                    <div className="overflow-y-scroll">
+                    <div className="overflow-y-scroll bg-[rgb(0,30,0)] pb-10 w-full">
                         <div className="absolute flex items-center justify-start w-full bg-[rgb(0,200,0)] text-white p-2 font-semibold text-[1.1rem] gap-2">
                             <h2>Agent support</h2>
                             <MdSupportAgent size={25} />
                         </div>                        
-                        <div className="flex flex-col px-2 pt-15 pb-20 bg-[rgb(0,30,0)] gap-4">
-                            {messages?.map(message => message.role === "user" ? 
+                        <div className="flex flex-col px-2 pt-15 pb-20 w-full gap-4">
+                            {messages.map(message => message.role === "user" ? 
                             (
                                 <div key={message?.id} className="flex justify-end">
                                     <p className="p-2 bg-[rgb(0,200,0)] w-auto max-w-[80%] rounded-md text-white">{message.message}</p>
@@ -124,7 +126,12 @@ export default function ChatAgent () {
                                     <ReactMarkdown remarkPlugins={[remarkGfm]} >{message.message}</ReactMarkdown>
                                 </div>
                             ))}              
-                            {thinking ? <p className="p-2 bg-gray-300 w-[30%] rounded-md">Thinking...</p> : null}                                                                                                  
+                            {thinking ? <p className="font-semibold p-2 bg-gray-300 w-[30%] rounded-md">
+                                Thinking
+                                <span className="move_dots">.</span>
+                                <span className="move_dots">.</span>
+                                <span className="move_dots">.</span>
+                            </p> : null}                                                                                                                          
                         </div>                        
                         <div ref={lastMessage} />
                     </div>

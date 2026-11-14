@@ -54,7 +54,7 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
             color: 'rgb(255, 255, 255)'
           }
         },
-        data: TotalCategoryValue,
+        data: Array.isArray(TotalCategoryValue) ? TotalCategoryValue : [],
       },
     ],
     legend: {

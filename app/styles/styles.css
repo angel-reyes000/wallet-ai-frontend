@@ -1,0 +1,27 @@
+.move_dots:nth-child(n) {
+    display: inline-block;
+    font-size: 1.5rem;
+    animation-name: animation_move_dots;
+    animation-duration: 1s;
+    animation-delay: 0s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.move_dots:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.move_dots:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+@keyframes animation_move_dots {
+    0% {
+        transform: translateY(1);
+    } 50% {
+        transform: translateY(-4);
+    } 100% {
+        transform: translateY(1);
+    }
+}
