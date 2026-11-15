@@ -1,9 +1,14 @@
 "use client"
 
 import { FaPlus } from "react-icons/fa";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { Card } from "@/app/schemas/schemas";
 import { validateCard, hasErrors, apiErrorMessage, type FieldErrors } from "@/app/schemas/validation";
+
+/** Card color + the glow color used by the .card-premium effect (globals.css). */
+function cardStyle (background: string, color: string): CSSProperties {
+    return { backgroundColor: background, color, "--card-glow": background } as CSSProperties;
+}
 
 type CardStatus = { type: "error" | "success", text: string } | null;
 
@@ -231,7 +236,7 @@ export default function Cards () {
                     }} className="cursor-pointer rounded-lg p-2 rotate-45 transition-colors hover:bg-white/10 active-scale-95"><FaPlus size={22} /></button>
                 </div>
                 <div className="flex flex-col gap-5">
-                    <div className="flex h-[200px] w-full max-w-[400px] flex-col justify-between gap-5 self-center rounded-2xl p-5 shadow-lg" style={{backgroundColor: `${dataCard.background_color}`, color: `${dataCard.color}`}}>
+                    <div className="flex h-[200px] w-full max-w-[400px] flex-col justify-between gap-5 self-center rounded-2xl p-5 card-premium" style={cardStyle(dataCard.background_color, dataCard.color)}>
                         <div className="flex justify-between gap-5">
                             <label className="flex gap-1 text-[1.05rem] font-semibold">
                                 <span>Name: </span>
@@ -306,7 +311,7 @@ export default function Cards () {
                 {cards.sort((a, b) => a.expired_date?.localeCompare(b?.expired_date)).map(card => card.id !== dataCard.id ? (
                     <div key={card.id} className="flex flex-wrap gap-5">
                         <div className="app-card flex w-full flex-col items-center gap-5 lg:flex-row lg:items-start">
-                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 shadow-lg sm:max-w-[380px]" style={{backgroundColor: `${card.background_color}`, color: `${card.color}`}}>
+                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 card-premium sm:max-w-[380px]" style={cardStyle(card.background_color, card.color)}>
                                 <div className="flex justify-between">
                                     <p className="text-[1.05rem] font-semibold">{card.name}</p>
                                     <p className="text-[1.05rem] font-semibold">{card.type}</p>
@@ -354,7 +359,7 @@ export default function Cards () {
                 ) : (
                     <div key={card.id} className="flex flex-wrap gap-5">
                         <div className="app-card flex w-full flex-col items-center gap-5 lg:flex-row lg:items-start">
-                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 shadow-lg sm:max-w-[380px]" style={{backgroundColor: `${dataCard.background_color}`,  color: `${dataCard.color}`}}>
+                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 card-premium sm:max-w-[380px]" style={cardStyle(dataCard.background_color, dataCard.color)}>
                                 <div className="flex justify-between">
                                     <p className="text-[1.05rem] font-semibold">{dataCard.name}</p>
                                     <p className="text-[1.05rem] font-semibold">{dataCard.type}</p>
