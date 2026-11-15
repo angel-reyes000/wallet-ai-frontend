@@ -4,7 +4,7 @@ import ChatAgent from "./components/chatAgent";
 export default function Layout ({ children }: LayoutProps<"/wallet_ai"> ) {
     return (
         <>
-            <div className="flex flex-row h-auto w-auto bg-[rgb(0,30,0)]">   
+            <div className="flex min-h-dvh w-full flex-1 flex-row bg-app-bg text-white [color-scheme:dark]">
                 <Menu />
                 {children}
                 <ChatAgent />

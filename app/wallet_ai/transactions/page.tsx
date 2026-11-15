@@ -318,145 +318,145 @@ export default function Transactions () {
     return (
         <>
             {/*--------------------------------------MODAL ADD-----------------------------------------------*/}
-            <dialog ref={refModalAdd} className='flex flex-col m-auto max-w-[50%] p-5 rounded-lg gap-5'>
-                <div className='flex justify-between'>
-                    <p className='font-bold text-xl'>Create transaction</p>
-                    <FaPlus onClick={() => closeModal("add")} size={20} className='rotate-45 cursor-pointer' />
-                </div>                
-                <div className='grid grid-cols-[auto_auto] gap-1'>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Date:</span>
-                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='border-2 border-gray-400 rounded-md p-1'></input>
+            <dialog ref={refModalAdd} className='m-auto flex w-[95%] max-w-lg flex-col gap-5 rounded-2xl border border-white/10 bg-app-surface p-5 text-white shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm sm:p-6'>
+                <div className='flex items-center justify-between'>
+                    <p className='text-xl font-bold'>Create transaction</p>
+                    <FaPlus onClick={() => closeModal("add")} size={20} className='rotate-45 cursor-pointer text-white/80 transition-colors hover:text-white' />
+                </div>
+                <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Date:</span>
+                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='app-field'></input>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Category:</span>
-                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Category:</span>
+                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='app-field cursor-pointer'>
                             {categories?.map(obj => (
                                 <option key={obj.id}>{obj.category_name}</option>
                             ))}
                         </select>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Type:</span>
-                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Type:</span>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='app-field cursor-pointer'>
                             <option>Cash</option>
                             {cards?.map(obj => (
                                 <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Amount:</span>
-                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='border-2 border-gray-400 rounded-md p-1'></input>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Amount:</span>
+                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='app-field'></input>
                     </label>
-                    <label className='flex flex-col w-full col-span-2'>
-                        <span className='font-semibold'>Description:</span>
-                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='border-2 border-gray-400 rounded-md p-1'></textarea>
+                    <label className='flex w-full flex-col gap-1 sm:col-span-2'>
+                        <span className='text-sm font-semibold text-green-100/80'>Description:</span>
+                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='app-field min-h-24'></textarea>
                     </label>
                 </div>
-                <div className='flex flex-row justify-between'>
-                    <button onClick={() => postTransaction()} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer min-w-[40%] hover:bg-[rgb(5,80,0)] active:scale-95'>Save</button>
-                    <button onClick={() => closeModal("add")} className='flex flex-row items-center justify-center p-2 rounded-lg text-black font-semibold border-2 border-gray-400 cursor-pointer min-w-[40%] hover:bg-gray-200 active:scale-95'>Cancel</button>
+                <div className='flex flex-row gap-3'>
+                    <button onClick={() => postTransaction()} className='btn btn-primary flex-1 py-2.5'>Save</button>
+                    <button onClick={() => closeModal("add")} className='btn btn-ghost flex-1 py-2.5'>Cancel</button>
                 </div>
             </dialog>
             {/*--------------------------------------MODAL EDIT----------------------------------------------*/}
-            <dialog ref={refModalEdit} className='flex flex-col m-auto max-w-[50%] p-5 rounded-lg gap-5'>
-                <div className='flex justify-between'>
-                    <p className='font-bold text-xl'>Edit transaction</p>
-                    <FaPlus onClick={() => closeModal("edit")} size={20} className='rotate-45 cursor-pointer' />
-                </div>                
-                <div className='grid grid-cols-[auto_auto] gap-1'>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Date:</span>
-                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='border-2 border-gray-400 rounded-md p-1'></input>
+            <dialog ref={refModalEdit} className='m-auto flex w-[95%] max-w-lg flex-col gap-5 rounded-2xl border border-white/10 bg-app-surface p-5 text-white shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm sm:p-6'>
+                <div className='flex items-center justify-between'>
+                    <p className='text-xl font-bold'>Edit transaction</p>
+                    <FaPlus onClick={() => closeModal("edit")} size={20} className='rotate-45 cursor-pointer text-white/80 transition-colors hover:text-white' />
+                </div>
+                <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Date:</span>
+                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='app-field'></input>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Category:</span>
-                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Category:</span>
+                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='app-field cursor-pointer'>
                             {categories?.map(obj => (
                                 <option key={obj.id}>{obj.category_name}</option>
                             ))}
                         </select>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Type:</span>
-                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='border-2 border-gray-400 rounded-md p-1'>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Type:</span>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='app-field cursor-pointer'>
                             <option>Cash</option>
                             {cards?.map(obj => (
                                 <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
                     </label>
-                    <label className='flex flex-col w-full'>
-                        <span className='font-semibold'>Amount:</span>
-                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='border-2 border-gray-400 rounded-md p-1'></input>
+                    <label className='flex w-full flex-col gap-1'>
+                        <span className='text-sm font-semibold text-green-100/80'>Amount:</span>
+                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='app-field'></input>
                     </label>
-                    <label className='flex flex-col w-full col-span-2'>
-                        <span className='font-semibold'>Description:</span>
-                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='border-2 border-gray-400 rounded-md p-1'></textarea>
+                    <label className='flex w-full flex-col gap-1 sm:col-span-2'>
+                        <span className='text-sm font-semibold text-green-100/80'>Description:</span>
+                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='app-field min-h-24'></textarea>
                     </label>
                 </div>
-                <div className='flex flex-row justify-between'>
-                    <button onClick={() => updateTransaction()} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer min-w-[40%] hover:bg-[rgb(5,80,0)] active:scale-95'>Edit</button>
-                    <button onClick={() => closeModal("edit")} className='flex flex-row items-center justify-center p-2 rounded-lg text-black font-semibold border-2 border-gray-400 cursor-pointer min-w-[40%] hover:bg-gray-200 active:scale-95'>Cancel</button>
-                </div>
-                <div className='flex flex-row justify-end'>
-                    <button onClick={() => deleteTransaction(transaction.id)} className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-red-600 cursor-pointer w-fit hover:bg-red-600 active:scale-95'><FaTrash size={20} /></button>
+                <div className='flex flex-row gap-3'>
+                    <button onClick={() => updateTransaction()} className='btn btn-primary flex-1 py-2.5'>Edit</button>
+                    <button onClick={() => closeModal("edit")} className='btn btn-ghost flex-1 py-2.5'>Cancel</button>
+                    <button aria-label='Delete transaction' onClick={() => deleteTransaction(transaction.id)} className='btn btn-danger px-3 py-2.5'><FaTrash size={18} /></button>
                 </div>
             </dialog>
             {/* {stateMessage.active ? <Message message={stateMessage.message} type={stateMessage.type} /> : null} */}
-            <div className="flex flex-col p-10 w-full text-white gap-4">
-                <div className="flex flex-col md:flex-row justify-between gap-5">
-                    <h1 className='font-bold text-4xl'>Transactions</h1>
-                    <div className='flex flex-row items-center gap-5'>
-                        <div className='flex flex-row items-center border-3 border-gray-300 p-2 rounded-lg bg-[rgb(0,15,0)] gap-2'>
-                            <FaSearch size={15} />
-                            <input value={inputSearch} onChange={(e) => setInputSearch(e.target.value)} className='focus:outline-0 text-[rgb(0,200,0)]' placeholder="Search..."></input>
+            <div className="flex w-full min-w-0 flex-1 flex-col gap-6 p-5 pb-32 text-white sm:p-8 sm:pb-32 lg:p-10 lg:pb-32">
+                <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
+                    <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>Transactions</h1>
+                    <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
+                        <div className='flex flex-row items-center gap-2 rounded-lg border border-white/15 bg-black/30 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/30'>
+                            <FaSearch size={15} className='text-green-300' />
+                            <input value={inputSearch} onChange={(e) => setInputSearch(e.target.value)} className='w-full bg-transparent text-white placeholder:text-white/40 focus:outline-0' placeholder="Search..."></input>
                         </div>
                         <button onClick={() => openModal("add")}
-                            className='flex flex-row items-center px-3 py-2 rounded-lg text-white font-semibold bg-[rgb(0,200,0)] cursor-pointer gap-2 hover:bg-[rgb(5,80,0)] active:scale-95'>
-                                <FaPlus size={15} />Create transaction
+                            className='btn btn-primary px-4 py-2.5'>
+                                <FaPlus size={14} />Create transaction
                         </button>
                     </div>
                 </div>
-                <div className='flex flex-col bg-[rgb(0,15,0)] rounded-lg p-5 w-full gap-5'>
-                    <div className='flex items-center gap-1'>
-                        <p className='text-lg font-bold'>Order by:</p>
-                        <button value={String(filters.all)} onClick={(e) => setFilters({all: !filters.all, incomes: false, expenses: false, date: filters.date})} className={'py-1 border-2 border-gray-400 min-w-[100px] font-semibold rounded-sm cursor-pointer active:scale-95' + (filters.all ? ' text-white bg-[rgb(0,200,0)] hover:bg-[rgb(0,120,0)] ' : ' hover:bg-[rgb(0,120,0)] ')}>All</button>
-                        <button value={String(filters.incomes)} onClick={(e) => setFilters({all: false, incomes: !filters.incomes, expenses: false, date: filters.date})} className={'py-1 border-2 border-gray-400 min-w-[100px] font-semibold rounded-sm cursor-pointer active:scale-95' + (filters.incomes ? ' text-white bg-[rgb(0,200,0)] hover:bg-[rgb(0,120,0)] ' : ' hover:bg-[rgb(0,120,0)] ')}>Incomes</button>
-                        <button value={String(filters.expenses)} onClick={(e) => setFilters({all: false, incomes: false, expenses: !filters.expenses, date: filters.date})} className={'py-1 border-2 border-gray-400 min-w-[100px] font-semibold rounded-sm cursor-pointer active:scale-95' + (filters.expenses ? ' text-white bg-[rgb(0,200,0)] hover:bg-[rgb(0,120,0)] ' : ' hover:bg-[rgb(0,120,0)] ')}>Expenses</button>
-                        <button value={String(filters.expenses)} onClick={(e) => setFilters({all: filters.all, incomes: filters.incomes, expenses: filters.expenses, date: !filters.date})} className={'py-1 border-2 border-gray-400 min-w-[100px] font-semibold rounded-sm cursor-pointer active:scale-95' + (filters.date ? ' text-white bg-[rgb(0,200,0)] hover:bg-[rgb(0,120,0)] ' : ' hover:bg-[rgb(0,120,0)] ')}>Date</button>
+                <div className='app-card flex w-full flex-col gap-5'>
+                    <div className='flex flex-wrap items-center gap-2'>
+                        <p className='mr-1 text-base font-bold'>Order by:</p>
+                        <button value={String(filters.all)} onClick={(e) => setFilters({all: !filters.all, incomes: false, expenses: false, date: filters.date})} className={'btn min-w-[88px] ' + (filters.all ? 'btn-primary' : 'btn-ghost')}>All</button>
+                        <button value={String(filters.incomes)} onClick={(e) => setFilters({all: false, incomes: !filters.incomes, expenses: false, date: filters.date})} className={'btn min-w-[88px] ' + (filters.incomes ? 'btn-primary' : 'btn-ghost')}>Incomes</button>
+                        <button value={String(filters.expenses)} onClick={(e) => setFilters({all: false, incomes: false, expenses: !filters.expenses, date: filters.date})} className={'btn min-w-[88px] ' + (filters.expenses ? 'btn-primary' : 'btn-ghost')}>Expenses</button>
+                        <button value={String(filters.expenses)} onClick={(e) => setFilters({all: filters.all, incomes: filters.incomes, expenses: filters.expenses, date: !filters.date})} className={'btn min-w-[88px] ' + (filters.date ? 'btn-primary' : 'btn-ghost')}>Date</button>
                     </div>
-                    <table className='w-full text-center'>
-                        <thead className='border-b-3 border-gray-500'>
-                            <tr className='bg-[rgb(0,200,0)]'>
-                                <th className='p-1'>Date</th>
-                                <th className='p-1'>Description</th>
-                                <th className='p-1'>Category</th>
-                                <th className='p-1'>Type</th>
-                                <th className='p-1'>Amount</th>
+                    <div className='w-full overflow-x-auto'>
+                    <table className='w-full min-w-[640px] text-left'>
+                        <thead>
+                            <tr>
+                                <th className='app-th'>Date</th>
+                                <th className='app-th'>Description</th>
+                                <th className='app-th'>Category</th>
+                                <th className='app-th'>Type</th>
+                                <th className='app-th'>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {dataTransactions?.filter(obj => 
-                                obj.date.toLowerCase().includes(inputSearch.toLowerCase()) || 
+                            {dataTransactions?.filter(obj =>
+                                obj.date.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.description.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.category.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.card.toLowerCase().includes(inputSearch.toLowerCase()) ||
                                 obj.type?.toLowerCase().includes(inputSearch.toLowerCase()) ||
-                                String(obj.amount).toLowerCase().includes(inputSearch.toLowerCase())                           
+                                String(obj.amount).toLowerCase().includes(inputSearch.toLowerCase())
                             ).toSorted((a, b) => dateFilter(a.date, b.date)).sort((a, b) => typeFilters(String(a.amount), String(b.amount)))
                             .map(obj => (
-                                <tr key={obj.id} onClick={() => openModal("edit", obj)} className='border-b-3 border-gray-300 hover:bg-[rgb(0,0,0)] hover:text-[rgb(0,200,0)] cursor-pointer'>
-                                    <td className='p-3'>{obj.date}</td>
-                                    <td className='p-3'>{obj.description}</td>
-                                    <td className='p-3'>{obj.category}</td>
-                                    <td className='p-3'>{obj.card} ({obj.type})</td>
-                                    <td className='p-3'>{obj.amount}</td>
+                                <tr key={obj.id} onClick={() => openModal("edit", obj)} className='cursor-pointer border-b border-white/10 transition-colors hover:bg-white/5 hover:text-green-300'>
+                                    <td className='app-td whitespace-nowrap'>{obj.date}</td>
+                                    <td className='app-td'>{obj.description}</td>
+                                    <td className='app-td'>{obj.category}</td>
+                                    <td className='app-td'>{obj.card} ({obj.type})</td>
+                                    <td className='app-td font-semibold tabular-nums'>{obj.amount}</td>
                                 </tr>
-                            ))}                            
+                            ))}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </>

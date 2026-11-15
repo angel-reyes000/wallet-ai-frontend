@@ -108,25 +108,25 @@ export default function ChatAgent () {
 
     return (
         <>
-            <div className="fixed right-10 bottom-10">
-                <div className={"relative flex justify-start bg-white w-[400px] h-[600px]" + (openChat ? ' flex ' : ' hidden ')}>
-                    <div className="overflow-y-scroll bg-[rgb(0,30,0)] pb-10 w-full">
-                        <div className="absolute flex items-center justify-start w-full bg-[rgb(0,200,0)] text-white p-2 font-semibold text-[1.1rem] gap-2">
+            <div className="fixed right-4 bottom-4 z-20 sm:right-10 sm:bottom-10">
+                <div className={"relative mb-3 h-[70dvh] max-h-[600px] w-[calc(100vw-2rem)] max-w-[400px] justify-start overflow-hidden rounded-2xl border border-white/10 bg-app-surface shadow-2xl shadow-black/50" + (openChat ? ' flex ' : ' hidden ')}>
+                    <div className="w-full overflow-y-auto bg-app-bg pb-10">
+                        <div className="absolute z-10 flex w-full items-center justify-start gap-2 bg-green-800 px-4 py-3 text-[1.05rem] font-semibold text-white shadow-md">
                             <h2>Agent support</h2>
                             <MdSupportAgent size={25} />
                         </div>                        
-                        <div className="flex flex-col px-2 pt-15 pb-20 w-full gap-4">
+                        <div className="flex w-full flex-col gap-4 px-3 pt-16 pb-24">
                             {messages.map(message => message.role === "user" ? 
                             (
                                 <div key={message?.id} className="flex justify-end">
-                                    <p className="p-2 bg-[rgb(0,200,0)] w-auto max-w-[80%] rounded-md text-white">{message.message}</p>
+                                    <p className="w-auto max-w-[80%] rounded-2xl rounded-br-sm bg-green-700 px-3 py-2 text-white">{message.message}</p>
                                 </div>
                             ) : (
-                                <div key={message?.id} className="p-2 bg-gray-300 w-[80%] rounded-md">
+                                <div key={message?.id} className="w-[85%] rounded-2xl rounded-bl-sm bg-green-50 px-3 py-2 text-gray-900">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]} >{message.message}</ReactMarkdown>
                                 </div>
                             ))}              
-                            {thinking ? <p className="font-semibold p-2 bg-gray-300 w-[30%] rounded-md">
+                            {thinking ? <p className="w-fit rounded-2xl rounded-bl-sm bg-green-50 px-3 py-2 font-semibold text-gray-900">
                                 Thinking
                                 <span className="move_dots">.</span>
                                 <span className="move_dots">.</span>
@@ -135,16 +135,16 @@ export default function ChatAgent () {
                         </div>                        
                         <div ref={lastMessage} />
                     </div>
-                    <div className="absolute bottom-0 flex items-center justify-between w-[96%] h-auto bg-gray-300 p-1">
-                        <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Write..." className="focus:outline-0 w-[80%] min-h-[70px] max-h-[80px] p-2"></textarea>
-                        <button onClick={() => postMessage()} className="flex items-center justify-end p-3 rounded-3xl bg-[rgb(0,200,0)] cursor-pointer text-white active:scale-95">
-                            <FiSend size={30} className="w-fit"/>
+                    <div className="absolute inset-x-0 bottom-0 flex h-auto w-full items-center justify-between gap-2 border-t border-white/10 bg-app-surface p-2">
+                        <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Write..." className="app-field min-h-[56px] max-h-[80px] flex-1 resize-none"></textarea>
+                        <button onClick={() => postMessage()} aria-label="Send message" className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-green-700 p-3 text-white transition duration-200 hover:bg-green-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
+                            <FiSend size={22} className="w-fit"/>
                         </button>
                     </div>
                 </div> 
                 <div className="flex justify-end">
-                    <button onClick={() => setOpenChat(!openChat)} className="bg-[rgb(0,200,0)] text-white cursor-pointer px-3 py-3 rounded-4xl active:scale-95">   
-                        {openChat ? <FaPlus size={50} className="rotate-45"/> : <MdSupportAgent size={50} />}
+                    <button onClick={() => setOpenChat(!openChat)} aria-label={openChat ? "Close chat" : "Open chat"} className="cursor-pointer rounded-full bg-green-700 p-3.5 text-white shadow-lg shadow-black/40 transition duration-200 hover:bg-green-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">   
+                        {openChat ? <FaPlus size={36} className="rotate-45"/> : <MdSupportAgent size={36} />}
                     </button>
                 </div>               
                 

@@ -23,13 +23,14 @@ export default function LineChartTotalMoney({ ListValuesLineChart, DataLabelsX }
     yAxis: {
       type: "value",
       axisLabel: {
-        color: "rgb(0,200,0)",
+        color: "rgb(134,239,172)",
       },
+      splitLine: { lineStyle: { color: "rgba(255,255,255,0.08)" } },
     },
     tooltip: {
       trigger: "axis",
-      backgroundColor: "black",
-      borderColor: "rgb(0,200,0)",
+      backgroundColor: "rgb(2,13,6)",
+      borderColor: "rgb(34,197,94)",
       textStyle: {
         color: "white",
         fontWeight: "bold",
@@ -42,14 +43,14 @@ export default function LineChartTotalMoney({ ListValuesLineChart, DataLabelsX }
         smooth: true,
         areaStyle: {
             opacity: 0.3,
-            color: "rgba(0,255,0,0.5)",
+            color: "rgba(34,197,94,0.6)",
         },
         lineStyle: {
-            color: "rgb(0, 255, 0)",
+            color: "rgb(74, 222, 128)",
             width: 3,
         },
         itemStyle: {
-            color: "rgb(0, 255, 0)",
+            color: "rgb(74, 222, 128)",
         },
       },
     ],

@@ -34,8 +34,8 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
     series: [
       {
         type: "pie",
-        center: ["35%", "50%"],
-        radius: "80%",
+        center: ["38%", "50%"],
+        radius: "72%",
         labelLine: {
             show: false,
         },

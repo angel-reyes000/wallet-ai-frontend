@@ -27,11 +27,13 @@ export default function BarChartTotalTypes ({ listCardsBarChart }: { listCardsBa
             axisLabel: {
                 color: "white"
             },
+            splitLine: { lineStyle: { color: "rgba(255,255,255,0.08)" } },
         },
         series: [
             {
                 name: "Total",
                 type: "bar",
+                itemStyle: { borderRadius: [6, 6, 0, 0] },
                 data: listCardsBarChart?.map(obj => ({
                     value: obj.total,
                     itemStyle: { color: obj.background_color || "#888888" },
