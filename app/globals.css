@@ -1,1 +1,58 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand: rgb(5, 100, 0);
+  --color-brand-dark: rgb(5, 80, 0);
+  --color-brand-deep: rgb(4, 40, 0);
+  --color-brand-soft: rgb(240, 253, 244);
+
+  /* Dashboard (wallet_ai) surfaces */
+  --color-app-bg: rgb(3, 18, 8);
+  --color-app-surface: rgb(8, 32, 16);
+  --color-app-raised: rgb(13, 46, 24);
+  --color-app-sidebar: rgb(2, 13, 6);
+}
+
+/* Shared dashboard building blocks (dark green theme) */
+@layer components {
+  .app-card {
+    @apply rounded-2xl border border-white/10 bg-app-surface p-5 shadow-lg shadow-black/20;
+  }
+
+  .app-field {
+    @apply w-full rounded-lg border border-white/15 bg-black/30 px-3 py-2 text-white placeholder:text-white/40 transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/30;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400;
+  }
+
+  .btn-primary {
+    @apply bg-green-700 text-white shadow-sm hover:bg-green-600;
+  }
+
+  .btn-ghost {
+    @apply border border-white/20 text-white hover:bg-white/10;
+  }
+
+  .btn-danger {
+    @apply bg-red-700 text-white hover:bg-red-600;
+  }
+
+  .app-th {
+    @apply bg-green-900/70 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-green-100 first:rounded-l-lg last:rounded-r-lg;
+  }
+
+  .app-td {
+    @apply px-3 py-3 text-sm;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+

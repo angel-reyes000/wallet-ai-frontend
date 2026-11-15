@@ -57,36 +57,36 @@ export default function Login () {
 
     return (
         <>
-            <div className='grid grid-cols-[1fr] sm:grid-cols-[1fr_1fr]'>
-                <div className='flex flex-col px-10 pt-10'>
-                    <div onClick={() => router.push("/")} className='flex flex-row items-center cursor-pointer'>
+            <div className='grid min-h-dvh grid-cols-[1fr] bg-white text-gray-900 sm:grid-cols-[1fr_1fr]'>
+                <div className='flex flex-col px-6 py-8 sm:px-10'>
+                    <div onClick={() => router.push("/")} className='flex w-fit cursor-pointer flex-row items-center gap-1'>
                         <Image src={logo} width={40} height={40} alt='logo'></Image>
-                        <p className='flex text-black text-[1.5rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-green-200 bg-clip-text text-transparent'>AI</span></p>
+                        <p className='flex text-[1.5rem] font-bold text-gray-900'>Wallet-<span className='bg-linear-to-t from-green-800 to-green-500 bg-clip-text text-transparent'>AI</span></p>
                     </div>
-                    <form onSubmit={(e) => verifyUser(e)} className='flex flex-col px-0 pt-5 md:px-5 md:pt-10 lg:px-10 lg:pt-10  gap-10'>
+                    <form onSubmit={(e) => verifyUser(e)} className='mx-auto my-auto flex w-full max-w-md flex-col gap-8 py-10'>
                         <div className='flex flex-col'>
-                           <h1 className='text-4xl font-bold'>Log in</h1>
-                            <p className='text-[1.1rem]'>Welcome again!</p> 
+                           <h1 className='text-4xl font-bold tracking-tight'>Log in</h1>
+                            <p className='mt-1 text-[1.05rem] text-gray-600'>Welcome again!</p> 
                         </div>
-                        <div className='flex flex-col gap-3'>
-                            <label className='flex flex-col'>
-                                <span className='font-semibold'>Email:</span>
-                                <input onChange={(e) => setUser({...user, email: e.target.value})} type='email' placeholder='example@exam.com' className='border-2 border-gray-400 rounded-sm p-2'></input>
+                        <div className='flex flex-col gap-4'>
+                            <label className='flex flex-col gap-1.5'>
+                                <span className='text-sm font-semibold text-gray-800'>Email:</span>
+                                <input onChange={(e) => setUser({...user, email: e.target.value})} type='email' placeholder='example@exam.com' className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-green-600/30'></input>
                             </label>
-                            <label className='flex flex-col'>
-                                <span className='font-semibold'>Password:</span>
-                                <input type="password" onChange={(e) => setUser({...user, password: e.target.value})} placeholder='Thebestpageaboutofpersonalfinances' className='border-2 border-gray-400 rounded-sm p-2'></input>
-                                <span className='text-gray-600 text-[0.9rem]'>Minimum 8 characters</span>
+                            <label className='flex flex-col gap-1.5'>
+                                <span className='text-sm font-semibold text-gray-800'>Password:</span>
+                                <input type="password" onChange={(e) => setUser({...user, password: e.target.value})} placeholder='Thebestpageaboutofpersonalfinances' className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-green-600/30'></input>
+                                <span className='text-[0.85rem] text-gray-500'>Minimum 8 characters</span>
                             </label>
                         </div>                        
-                        <div className='flex flex-col gap-2 text-center'>
-                            <p className={'p-0 m-0 text-[0.9rem] w-full text-right' + (message.toLowerCase().includes("loading") ? ' text-blue-500 ' : ' text-red-500 ')}>{message}</p>
-                            <button type='submit' className='w-full p-3 bg-[rgb(5,100,0)] text-white cursor-pointer font-bold rounded-lg hover:bg-[rgb(5,80,0)] active:scale-98'>Log in</button>
-                            <p>Don't have an account? <Link href={'/signup'} className='text-green-700 hover:underline'>Sign up</Link></p>                   
+                        <div className='flex flex-col gap-3 text-center text-gray-600'>
+                            <p className={'m-0 min-h-5 w-full p-0 text-right text-[0.9rem]' + (message.toLowerCase().includes("loading") ? ' text-green-700 ' : ' text-red-600 ')}>{message}</p>
+                            <button type='submit' className='w-full cursor-pointer rounded-lg bg-brand p-3 font-bold text-white shadow-md shadow-green-900/20 transition duration-200 hover:bg-brand-dark active:scale-98 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand'>Log in</button>
+                            <p>Don't have an account? <Link href={'/signup'} className='font-semibold text-green-700 underline-offset-4 hover:underline'>Sign up</Link></p>                   
                         </div>
                     </form>
                 </div>
-                <div className='bg-[url("@/public/image-login/image_login.png")] bg-cover bg-center bg-norepeat w-full h-dvh hidden sm:flex'></div>
+                <div className='bg-[url("@/public/image-login/image_login.png")] bg-cover bg-center bg-no-repeat w-full h-dvh sticky top-0 hidden sm:flex'></div>
             </div>
         </>
     )

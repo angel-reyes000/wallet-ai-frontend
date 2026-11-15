@@ -170,23 +170,23 @@ export default function Cards () {
     }
 
     return (
-        <>  
-            <dialog ref={refModalAddCard} className="flex flex-col m-auto p-5 bg-[rgb(0,30,0)] rounded-md text-white gap-5">
-                <div className="flex justify-between">
-                    <h1 className="font-bold text-[1.5rem]">Add Card</h1>
-                    <button onClick={() => {
+        <>
+            <dialog ref={refModalAddCard} className="m-auto flex w-[95%] max-w-lg flex-col gap-5 rounded-2xl border border-white/10 bg-app-surface p-5 text-white shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm sm:p-6">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">Add Card</h1>
+                    <button aria-label="Close" onClick={() => {
                         refModalAddCard.current?.close()
                         refModalAddCard.current!.style.display = 'none';
-                    }} className="cursor-pointer rotate-45 active-scale-95"><FaPlus size={25} /></button>
+                    }} className="cursor-pointer rounded-lg p-2 rotate-45 transition-colors hover:bg-white/10 active-scale-95"><FaPlus size={22} /></button>
                 </div>
                 <div className="flex flex-col gap-5">
-                    <div className="flex flex-col justify-between p-5 h-[200px] w-[400px] rounded-xl gap-5" style={{backgroundColor: `${dataCard.background_color}`, color: `${dataCard.color}`}}>
+                    <div className="flex h-[200px] w-full max-w-[400px] flex-col justify-between gap-5 self-center rounded-2xl p-5 shadow-lg" style={{backgroundColor: `${dataCard.background_color}`, color: `${dataCard.color}`}}>
                         <div className="flex justify-between gap-5">
-                            <label className="flex font-semibold text-[1.1rem] gap-1">
+                            <label className="flex gap-1 text-[1.05rem] font-semibold">
                                 <span>Name: </span>
                                 <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} className="w-[80%] focus:outline-0 border-b-1"></input>
                             </label>
-                            <label className="flex font-semibold text-[1.1rem] gap-1">
+                            <label className="flex gap-1 text-[1.05rem] font-semibold">
                                 <span>Type:</span>
                                 <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})}>
                                     <option value={'Credit'}>Credit</option>
@@ -194,44 +194,44 @@ export default function Cards () {
                                 </select>
                             </label>
                         </div>
-                        <label className="font-semibold text-[1.1rem] w-[80%]">
+                        <label className="w-[80%] text-[1.05rem] font-semibold">
                             Last four digits: *******************
                             <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="w-[20%]"></input>
                         </label>
-                        <div className="flex justify-between items-center">   
+                        <div className="flex items-center justify-between">
                             <label>
                                 <span className="font-semibold">CVV: ***</span>
                             </label>
                             <label className="font-semibold">
                                 <span >Vence: </span>
                                 <input value={dataCard.expired_date} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month"></input>
-                            </label>      
+                            </label>
                         </div>
-                    </div>  
-                    <div className="flex justify-between">
-                        <label className="flex items-center">
-                            Background color: 
-                            <input value={dataCard.background_color} onChange={(e) => setDataCard({...dataCard, background_color: e.target.value})} type="color"></input>
+                    </div>
+                    <div className="flex flex-wrap justify-between gap-3 text-sm font-medium">
+                        <label className="flex items-center gap-2">
+                            Background color:
+                            <input value={dataCard.background_color} onChange={(e) => setDataCard({...dataCard, background_color: e.target.value})} type="color" className="h-8 w-10 cursor-pointer rounded bg-transparent"></input>
                         </label>
-                        <label >
+                        <label className="flex items-center gap-2">
                             Color:
-                            <input value={dataCard.color} onChange={(e) => setDataCard({...dataCard, color: e.target.value})} type="color"></input>
+                            <input value={dataCard.color} onChange={(e) => setDataCard({...dataCard, color: e.target.value})} type="color" className="h-8 w-10 cursor-pointer rounded bg-transparent"></input>
                         </label>
-                    </div>                    
-                </div>    
-                <div className="flex justify-end gap-5">
-                    <button onClick={() => postCard()} className="p-1 bg-[rgb(0,200,0)] w-[100px] cursor-pointer active:scale-95">Save</button>
+                    </div>
+                </div>
+                <div className="flex justify-end gap-3">
+                    <button onClick={() => postCard()} className="btn btn-primary w-[110px]">Save</button>
                     <button onClick={() => {
                         refModalAddCard.current?.close()
                         refModalAddCard.current!.style.display = 'none';
-                    }} className="p-1 border-1 w-[100px] cursor-pointer active:scale-95">Cancel</button>
-                </div>            
+                    }} className="btn btn-ghost w-[110px]">Cancel</button>
+                </div>
             </dialog>
-            <div className="flex flex-col p-10 pb-50 text-white w-full gap-2">
-                <div className="flex justify-between items-center pb-5 gap-5">
+            <div className="flex w-full min-w-0 flex-1 flex-col gap-4 p-5 pb-40 text-white sm:p-8 sm:pb-40 lg:p-10 lg:pb-40">
+                <div className="flex flex-wrap items-center justify-between gap-5 pb-2">
                     <div>
-                        <h1 className='font-bold text-4xl'>Cards</h1>
-                        <p>Analize visually your cards</p> 
+                        <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>Cards</h1>
+                        <p className="mt-1 text-green-100/70">Analize visually your cards</p>
                     </div>
                     <button onClick={() => {
                         refModalAddCard.current?.showModal()
@@ -246,75 +246,75 @@ export default function Cards () {
                             expired_date: "",
                             created_at: "",
                         })
-                    }} className="flex items-center justify-center rounded-sm bg-[rgb(0,200,0)] h-fit w-[150px] p-1 font-semibold text-[1.1rem] cursor-pointer active:scale-95 gap-2"><FaPlus size={20}/> Add card</button>
+                    }} className="btn btn-primary px-5 py-2.5 text-base"><FaPlus size={16}/> Add card</button>
                 </div>
                 {cards.sort((a, b) => a.expired_date?.localeCompare(b?.expired_date)).map(card => card.id !== dataCard.id ? (
                     <div key={card.id} className="flex flex-wrap gap-5">
-                        <div className="flex flex-col items-center lg:items-start lg:flex-row bg-[rgb(0,15,0)] w-full rounded-md p-5 gap-5">
-                            <div className="flex flex-col justify-between p-5 h-[200px] min-w-[300px] max-w-[300px] sm:min-w-[380px] sm:max-w-[380px] rounded-xl gap-5" style={{backgroundColor: `${card.background_color}`, color: `${card.color}`}}>
+                        <div className="app-card flex w-full flex-col items-center gap-5 lg:flex-row lg:items-start">
+                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 shadow-lg sm:max-w-[380px]" style={{backgroundColor: `${card.background_color}`, color: `${card.color}`}}>
                                 <div className="flex justify-between">
-                                    <p className="font-semibold text-[1.1rem]">{card.name}</p>
-                                    <p className="font-semibold text-[1.1rem]">{card.type}</p>
+                                    <p className="text-[1.05rem] font-semibold">{card.name}</p>
+                                    <p className="text-[1.05rem] font-semibold">{card.type}</p>
                                 </div>
-                                <p className="font-semibold text-[1.1rem] w-full">*******************{card.last_numbers}</p>
-                                <div className="flex justify-between items-center">    
-                                    <p className="font-semibold">CVV: ***</p>                        
+                                <p className="w-full text-[1.05rem] font-semibold">*******************{card.last_numbers}</p>
+                                <div className="flex items-center justify-between">
+                                    <p className="font-semibold">CVV: ***</p>
                                     <p className="font-semibold">Vence: {card.expired_date?.slice(0,7)}</p>
                                 </div>
-                            </div>                         
-                            <div className="flex flex-col w-full gap-5">
-                                <div className="flex justify-between">
-                                    <h2 className="font-semibold text-[1.2rem]">Details</h2>
-                                    <button onClick={() => setDataCard(card)} className="bg-[rgb(0,200,0)] p-2 cursor-pointer active:scale-95">Edit card</button>
+                            </div>
+                            <div className="flex w-full min-w-0 flex-col gap-5">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold">Details</h2>
+                                    <button onClick={() => setDataCard(card)} className="btn btn-primary">Edit card</button>
                                 </div>
-                                <div className="flex flex-wrap gap-10">
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Name card:</span>
+                                <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2 xl:grid-cols-3">
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Name card:</span>
                                         <p>{card.name}</p>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Type:</span>
-                                        <p>{card.type}</p>  
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Type:</span>
+                                        <p>{card.type}</p>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Last four digits</span>
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Last four digits</span>
                                         <p>{card.last_numbers}</p>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Expired date:</span>
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Expired date:</span>
                                         <p>{card.expired_date?.slice(0,7)}</p>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Background color:</span>
-                                        <p>{card.background_color}</p>  
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Background color:</span>
+                                        <p>{card.background_color}</p>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Color:</span>
-                                        <p>{card.color}</p>  
+                                    <label className="flex flex-wrap gap-1">
+                                        <span className="font-semibold text-green-100/70">Color:</span>
+                                        <p>{card.color}</p>
                                     </label>
                                 </div>
-                            </div>                                            
-                        </div>                    
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <div key={card.id} className="flex flex-wrap gap-5">
-                        <div className="flex flex-col items-center lg:items-start lg:flex-row bg-[rgb(0,15,0)] w-full rounded-md p-5 gap-5">
-                            <div className="flex flex-col justify-between p-5 h-[200px] min-w-[300px] max-w-[300px] sm:min-w-[380px] sm:max-w-[380px] rounded-xl gap-5" style={{backgroundColor: `${dataCard.background_color}`,  color: `${dataCard.color}`}}>
+                        <div className="app-card flex w-full flex-col items-center gap-5 lg:flex-row lg:items-start">
+                            <div className="flex h-[200px] w-full max-w-[300px] shrink-0 flex-col justify-between gap-5 rounded-2xl p-5 shadow-lg sm:max-w-[380px]" style={{backgroundColor: `${dataCard.background_color}`,  color: `${dataCard.color}`}}>
                                 <div className="flex justify-between">
-                                    <p className="font-semibold text-[1.1rem]">{dataCard.name}</p>
-                                    <p className="font-semibold text-[1.1rem]">{dataCard.type}</p>
+                                    <p className="text-[1.05rem] font-semibold">{dataCard.name}</p>
+                                    <p className="text-[1.05rem] font-semibold">{dataCard.type}</p>
                                 </div>
-                                <p className="font-semibold text-[1.1rem] w-full">*******************{dataCard.last_numbers}</p>
-                                <div className="flex justify-between items-center">    
-                                    <p className="font-semibold">CVV: ***</p>                        
+                                <p className="w-full text-[1.05rem] font-semibold">*******************{dataCard.last_numbers}</p>
+                                <div className="flex items-center justify-between">
+                                    <p className="font-semibold">CVV: ***</p>
                                     <p className="font-semibold">Vence: {dataCard.expired_date?.slice(0,7)}</p>
                                 </div>
-                            </div>                         
-                            <div className="flex flex-col w-full gap-5">
-                                <div className="flex justify-between">
-                                    <h2 className="font-semibold text-[1.2rem]">Details</h2>
+                            </div>
+                            <div className="flex w-full min-w-0 flex-col gap-5">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-lg font-semibold">Details</h2>
                                     <div className="flex gap-2">
-                                        <button onClick={() => updateCard()} className="bg-[rgb(0,200,0)] p-2 cursor-pointer active:scale-95">Save</button>
+                                        <button onClick={() => updateCard()} className="btn btn-primary">Save</button>
                                         <button onClick={() => setDataCard({
                                             id: 0,
                                             name: "",
@@ -324,43 +324,43 @@ export default function Cards () {
                                             color: "black",
                                             expired_date: "",
                                             created_at: "",
-                                        })} className="bg-[rgb(200,0,0)] p-2 cursor-pointer active:scale-95">cancel</button> 
-                                    </div>                                    
+                                        })} className="btn btn-danger">cancel</button>
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-10">
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Name card:</span>                                        
-                                        <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} placeholder="name..." className="focus:outline-0 border-b-1"></input>                                   
+                                <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
+                                    <label className="flex flex-col gap-1">
+                                        <span className="text-sm font-semibold text-green-100/70">Name card:</span>
+                                        <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} placeholder="name..." className="app-field"></input>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Type:</span>
-                                        <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})} className="bg-black">
+                                    <label className="flex flex-col gap-1">
+                                        <span className="text-sm font-semibold text-green-100/70">Type:</span>
+                                        <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})} className="app-field cursor-pointer">
                                             <option value={'Credit'}>Credit</option>
                                             <option value={'Debit'}>Debit</option>
-                                        </select>                                                                                                               
+                                        </select>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Last four digits:</span>                                    
-                                        <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="focus:outline-0 border-b-1"></input>
+                                    <label className="flex flex-col gap-1">
+                                        <span className="text-sm font-semibold text-green-100/70">Last four digits:</span>
+                                        <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="app-field"></input>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Expired date:</span>                                        
-                                        <input value={dataCard.expired_date?.slice(0,7)} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month" className="[&::-webkit-calendar-picker-indicator]:invert cursor-pointer"></input>
+                                    <label className="flex flex-col gap-1">
+                                        <span className="text-sm font-semibold text-green-100/70">Expired date:</span>
+                                        <input value={dataCard.expired_date?.slice(0,7)} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month" className="app-field [&::-webkit-calendar-picker-indicator]:invert cursor-pointer"></input>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Background color:</span>
-                                        <input value={dataCard.background_color} onChange={(e) => setDataCard({...dataCard, background_color: e.target.value})} type="color"></input>                                                                       
+                                    <label className="flex items-center gap-2">
+                                        <span className="text-sm font-semibold text-green-100/70">Background color:</span>
+                                        <input value={dataCard.background_color} onChange={(e) => setDataCard({...dataCard, background_color: e.target.value})} type="color" className="h-8 w-10 cursor-pointer rounded bg-transparent"></input>
                                     </label>
-                                    <label className="flex gap-1">
-                                        <span className="font-semibold">Color:</span>
-                                        <input value={dataCard.color} onChange={(e) => setDataCard({...dataCard, color: e.target.value})} type="color"></input>                                                                       
+                                    <label className="flex items-center gap-2">
+                                        <span className="text-sm font-semibold text-green-100/70">Color:</span>
+                                        <input value={dataCard.color} onChange={(e) => setDataCard({...dataCard, color: e.target.value})} type="color" className="h-8 w-10 cursor-pointer rounded bg-transparent"></input>
                                     </label>
                                 </div>
-                            </div>                                            
-                        </div>                    
+                            </div>
+                        </div>
                     </div>
                 ))}
-                
+
             </div>
         </>
     )

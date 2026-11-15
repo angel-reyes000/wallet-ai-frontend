@@ -75,16 +75,16 @@ export default function Menu () {
 
     return (
         <>
-            <dialog ref={refModal} className='flex flex-col m-auto max-w-[50%] p-5 rounded-lg gap-2'>
+            <dialog ref={refModal} className='m-auto flex w-[90%] max-w-sm flex-col gap-4 rounded-2xl border border-white/10 bg-app-surface p-6 text-white shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm'>
                 <div className='flex items-center justify-center w-full'>
-                    <FaTriangleExclamation size={50} className='bg-black text-yellow-500 p-1 rounded-4xl' />
+                    <FaTriangleExclamation size={52} className='rounded-full bg-black/40 p-3 text-yellow-400' />
                 </div>
                 <div className='flex justify-between'>
-                    <p className='font-bold text-xl'>Session expired!</p>
+                    <p className='w-full text-center text-xl font-bold'>Session expired!</p>
                 </div>                
                 <div className='flex flex-row'>
                     <button onClick={() => redirectionLogin()}
-                        className='flex flex-row items-center justify-center p-2 rounded-lg text-white font-semibold bg-[rgb(5,100,0)] cursor-pointer w-full hover:bg-[rgb(5,80,0)] active:scale-95'>
+                        className='btn btn-primary w-full py-2.5'>
                             Log in
                     </button>
                 </div>
@@ -98,20 +98,20 @@ export default function Menu () {
                         </div>      
                         <div onClick={() => router.push('/')} className='menu_logo'>
                             <Image src={logo} width={40} height={40} alt='logo'></Image>
-                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-[rgb(0,255,0)] bg-clip-text text-transparent'>AI</span></p>                      
+                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-600 to-green-300 bg-clip-text text-transparent'>AI</span></p>                      
                         </div>                  
                     </div>
                     <div className='menu_sections'>
-                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <LuArrowUpDown size={20} />Transactions
                         </Link>
-                        <Link href={'/wallet_ai/cards'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/cards'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FaCreditCard size={20} />Cards
                         </Link>
-                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/configuration'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FiSettings size={20} />Configuration
                         </Link>
                     </div>
@@ -133,20 +133,20 @@ export default function Menu () {
                         </div>      
                         <div onClick={() => router.push('/')} className='menu_logo'>
                             <Image src={logo} width={40} height={40} alt='logo'></Image>
-                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-900 to-[rgb(0,255,0)] bg-clip-text text-transparent'>AI</span></p>                      
+                            <p className='flex text-[1.2rem] font-bold mr-10'>Wallet-<span className='bg-linear-to-t from-green-600 to-green-300 bg-clip-text text-transparent'>AI</span></p>                      
                         </div>                  
                     </div>
                     <div className='menu_sections'>
-                        <Link href={'/wallet_ai'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FaHome size={20} />Resume
                         </Link>
-                        <Link href={'/wallet_ai/transactions'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/transactions'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <LuArrowUpDown size={20} />Transactions
                         </Link>
-                        <Link href={'/wallet_ai/cards'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/cards'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FaCreditCard size={20} />Cards
                         </Link>
-                        <Link href={'/wallet_ai/configuration'} className='flex items-center hover:bg-[rgb(0,200,0)] hover:text-white p-2 rounded-lg gap-2'>
+                        <Link href={'/wallet_ai/configuration'} className='flex items-center gap-3 rounded-lg px-3 py-2.5 text-green-50/90 transition-colors duration-200 hover:bg-green-700 hover:text-white focus-visible:outline-2 focus-visible:outline-green-400'>
                             <FiSettings size={20} />Configuration
                         </Link>
                     </div>
