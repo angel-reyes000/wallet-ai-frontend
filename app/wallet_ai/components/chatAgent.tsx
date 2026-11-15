@@ -59,14 +59,21 @@ export default function ChatAgent () {
 
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
 
+    //     lastMessage.current?.scrollIntoView({
+    //         behavior: "smooth",
+    //         block: "end",
+    //     })
+
+    // }, [messages])
+
+    function scrollToMessage () {
         lastMessage.current?.scrollIntoView({
             behavior: "smooth",
             block: "end",
         })
-
-    }, [messages])
+    }
 
     async function postMessage () {
         const token = localStorage.getItem("token");
@@ -88,7 +95,7 @@ export default function ChatAgent () {
         let id = Date.now();
 
         setInputMessage("")
-        setMessages([...messages, {"id": id, "role": "user", "message": message}])        
+        setMessages([...messages, {"id": id, "role": "user", "message": message}])    
 
         try {
 
@@ -111,6 +118,8 @@ export default function ChatAgent () {
                 setChatError(apiErrorMessage(data, "The agent could not answer, try again."))
                 return
             }
+
+            scrollToMessage();
 
             // The reply arrives as Server-Sent Events: {"token"} per token, then {"done", "message"}.
             const replyId = id + 1;
@@ -158,6 +167,8 @@ export default function ChatAgent () {
                     }
                 }
             }
+
+            scrollToMessage();
 
         } catch (error) {
             console.log("Error in postMessages", error)
