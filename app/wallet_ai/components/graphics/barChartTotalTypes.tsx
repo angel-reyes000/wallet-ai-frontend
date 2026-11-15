@@ -30,12 +30,19 @@ export default function BarChartTotalTypes ({ listCardsBarChart }: { listCardsBa
         },
         series: [
             {
-                name: "Ventas",
+                name: "Total",
                 type: "bar",
                 data: listCardsBarChart?.map(obj => ({
                     value: obj.total,
                     itemStyle: { color: obj.background_color || "#888888" },
                 })),
+                label: {
+                    show: true,
+                    position: "top",
+                    color: "white",
+                    fontSize: 12,
+                    formatter: "${c}",                    
+                },
             }
         ]
     };

@@ -11,6 +11,7 @@ import { LuMenu, LuArrowUpDown } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { dataUser } from '@/app/schemas/schemas'; 
+import { jwtDecode } from 'jwt-decode'; 
 
 export default function Menu () {
     const [dataUser, setDataUser] = useState<dataUser>(); 
@@ -20,9 +21,20 @@ export default function Menu () {
     const router = useRouter();
 
     useEffect(() => {
-        async function getDataUser () {
+        const token = localStorage.getItem('token');
+        const { exp } = jwtDecode(token!)
 
-            const token = localStorage.getItem('token');
+        const expired = (exp! * 1000) - Date.now();
+
+        setTimeout(() => {
+            console.log("Session expired")
+            refModal.current?.showModal();
+            refModal.current!.style.display = 'flex';
+            return
+        }, expired)
+
+        async function getDataUser () {
+            
             refModal.current!.style.display = 'none';
 
             try {

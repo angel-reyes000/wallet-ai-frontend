@@ -4,7 +4,7 @@ import LineChartTotalMoney from "./components/graphics/lineChartTotalMoney"
 import PieChartExpensesToCategory from "./components/graphics/pieChartExpensesToCategory"
 import { FaShop } from "react-icons/fa6"
 import { act, useEffect, useState } from "react"
-import { Transaction, TotalToCategory, ListCardsBarChart } from "../schemas/schemas"
+import { Transaction, TotalToCategory, ListCardsBarChart, TotalToType } from "../schemas/schemas"
 import BarChartTotalTypes from '@/app/wallet_ai/components/graphics/barChartTotalTypes';
 
 export default function WalletAI () {
@@ -20,6 +20,7 @@ export default function WalletAI () {
     const [listValuesLineChart, setListValuesLineChart] = useState();
     const [errorFilter, setErrorFilter] = useState<string>("");
     const [listCardsBarChart, setListCardsBarChart] = useState<ListCardsBarChart[]>();
+    const [listTotalToType, setListTotalToType] = useState<TotalToType[]>();
 
 
     useEffect(() => {
@@ -186,6 +187,32 @@ export default function WalletAI () {
 
         getTotalCardsBarChart();
 
+        async function getTotalToType () {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/cards/getTotalToType?year=${filterYear}&month=${filterMonth}`, {
+                    method: 'GET',
+                    headers: {
+                        'content-type': 'application/json',
+                        authorization: `Bearer ${token}`
+                    }
+                })
+
+                const data = await response.json();
+
+                if (response.status != 200) {
+                    console.log("Error to getTotalToType: ", data)
+                    setListTotalToType([])
+                    return
+                }
+
+                setListTotalToType(Array.isArray(data) ? data : [])
+            } catch (error) {
+                console.log("Error in getTotalToType: ", error)
+            }
+        }
+
+        getTotalToType();
+
         
     }, [filterAllTime, filterYear, filterMonth])
 
@@ -238,15 +265,15 @@ export default function WalletAI () {
                 <div className="flex justify-between bg-[rgb(0,15,0)] p-5 rounded-xl gap-3">
                     <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total balance</p>
-                        <p className="font-semibold">{totalBalance}</p>
+                        <p className="font-semibold">{totalBalance || 0}</p>
                     </div>
                     <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total Incomes</p>
-                        <p className="font-semibold text-[rgb(0,200,0)]">{totalIncomes}</p>
+                        <p className="font-semibold text-[rgb(0,200,0)]">{totalIncomes || 0}</p>
                     </div>
                     <div className="flex flex-col border-1 px-2 py-1 w-full rounded-md">
                         <p className="font-bold text-[0.9rem]">Total expenses</p>
-                        <p className="font-semibold text-[rgb(255,0,0)]">{totalExpenses}</p>
+                        <p className="font-semibold text-[rgb(255,0,0)]">{totalExpenses || 0}</p>
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row h-[400px] gap-5">
@@ -282,75 +309,38 @@ export default function WalletAI () {
                     <div className="flex flex-col gap-10">
                         <BarChartTotalTypes listCardsBarChart={listCardsBarChart!} />
                         <div className="flex flex-col gap-2">
-                            <div className="flex bg-gray-900 p-3 gap-2">
-                                <div className="bg-blue-700 h-[80px] w-[160px] p-2 rounded-xl">
-                                    <p className="font-semibold text-[1.5rem]">Credit card</p>
-                                </div>
-                                <div className="flex justify-around w-full">
-                                    <div className="font-bold">
-                                        <p>Total money: </p>
-                                        <p>17627.090</p>
-                                    </div>   
-                                    <div className="font-bold">
-                                        <p>Total moviments: </p>
-                                        <p>17627.090</p>
+                            {[
+                                { type: "Credit", label: "Credit card", bg: "bg-blue-700" },
+                                { type: "Debit", label: "Debit card", bg: "bg-red-700" },
+                                { type: "Cash", label: "Cash", bg: "bg-green-500" },
+                            ].map(({ type, label, bg }) => {
+                                const row = listTotalToType?.find(r => r.type === type)
+                                return (
+                                    <div key={type} className="flex bg-gray-900 p-3 gap-2">
+                                        <div className={`${bg} h-[80px] w-[160px] p-2 rounded-xl`}>
+                                            <p className="font-semibold text-[1.5rem]">{label}</p>
+                                        </div>
+                                        <div className="flex justify-around w-full">
+                                            <div className="font-bold">
+                                                <p>Total money: </p>
+                                                <p>{Number(row?.total_money ?? 0)}</p>
+                                            </div>
+                                            <div className="font-bold">
+                                                <p>Total moviments: </p>
+                                                <p>{Number(row?.total_moviments ?? 0)}</p>
+                                            </div>
+                                            <div className="font-bold">
+                                                <p>Total incomes: </p>
+                                                <p>{Number(row?.total_incomes ?? 0)}</p>
+                                            </div>
+                                            <div className="font-bold">
+                                                <p>Total expenses: </p>
+                                                <p>{Number(row?.total_expenses ?? 0)}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="font-bold">
-                                        <p>Total incomes: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                    <div className="font-bold">
-                                        <p>Total expenses: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                </div>                                                        
-                            </div>
-                            <div className="flex bg-gray-900 p-3 gap-2">
-                                <div className="bg-red-700 h-[80px] w-[160px] p-2 rounded-xl">
-                                    <p className="font-semibold text-[1.5rem]">Debit card</p>
-                                </div>
-                                <div className="flex justify-around w-full">
-                                    <div className="font-bold">
-                                        <p>Total money: </p>
-                                        <p>17627.090</p>
-                                    </div>   
-                                    <div className="font-bold">
-                                        <p>Total moviments: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                    <div className="font-bold">
-                                        <p>Total incomes: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                    <div className="font-bold">
-                                        <p>Total expenses: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                </div>                                                        
-                            </div>
-                            <div className="flex bg-gray-900 p-3 gap-2">
-                                <div className="bg-green-500 h-[80px] w-[160px] p-2 rounded-xl">
-                                    <p className="font-semibold text-[1.5rem]">Cash</p>
-                                </div>
-                                <div className="flex justify-around w-full">
-                                    <div className="font-bold">
-                                        <p>Total money: </p>
-                                        <p>17627.090</p>
-                                    </div>   
-                                    <div className="font-bold">
-                                        <p>Total moviments: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                    <div className="font-bold">
-                                        <p>Total incomes: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                    <div className="font-bold">
-                                        <p>Total expenses: </p>
-                                        <p>17627.090</p>
-                                    </div>
-                                </div>                                                        
-                            </div>
+                                )
+                            })}
                         </div>
                     </div>                    
                 </div>                    
