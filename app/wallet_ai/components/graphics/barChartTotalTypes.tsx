@@ -1,8 +1,11 @@
 
 import ReactECharts from "echarts-for-react";
 import { ListCardsBarChart } from "@/app/schemas/schemas";
+import { useSettings } from "../settingsProvider";
 
 export default function BarChartTotalTypes ({ listCardsBarChart }: { listCardsBarChart: ListCardsBarChart[]}) {
+    const { theme } = useSettings();
+    const ink = theme === "light" ? "#052e16" : "white";
     const option = {
         // title: {
         //     text: "Ventas mensuales"
@@ -18,16 +21,16 @@ export default function BarChartTotalTypes ({ listCardsBarChart }: { listCardsBa
         xAxis: {
             type: "category",
             axisLabel: {
-                color: "white"
+                color: ink
             },
             data: listCardsBarChart?.map(obj => obj.card),
         },
         yAxis: {
             type: "value",
             axisLabel: {
-                color: "white"
+                color: ink
             },
-            splitLine: { lineStyle: { color: "rgba(255,255,255,0.08)" } },
+            splitLine: { lineStyle: { color: theme === "light" ? "rgba(5,46,22,0.1)" : "rgba(255,255,255,0.08)" } },
         },
         series: [
             {
@@ -41,7 +44,7 @@ export default function BarChartTotalTypes ({ listCardsBarChart }: { listCardsBa
                 label: {
                     show: true,
                     position: "top",
-                    color: "white",
+                    color: ink,
                     fontSize: 12,
                     formatter: "${c}",                    
                 },

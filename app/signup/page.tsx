@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { User } from '../schemas/schemas';
 import { useRouter } from 'next/navigation'; 
+import { validateSignUp, hasErrors, apiErrorMessage, type FieldErrors } from '../schemas/validation';
 
 export default function SignUp () {
 
@@ -18,11 +19,21 @@ export default function SignUp () {
     const [checkBox, setCheckBox] = useState<boolean>(false);
 
     const [message, setMessage] = useState<string>("");
+    const [errors, setErrors] = useState<FieldErrors>({});
+
+    const loading = message.toLowerCase().includes("loading");
 
     const router = useRouter();
 
     async function postUser (e: any) {
         e.preventDefault()
+
+        if (loading) return;
+
+        const found = validateSignUp({username: user.username ?? "", email: user.email, password: user.password}, checkBox);
+        setErrors(found);
+
+        if (hasErrors(found)) return;
 
         setMessage("Loading...")
 
@@ -34,8 +45,8 @@ export default function SignUp () {
                     'content-type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: user.username,
-                    email: user.email,
+                    username: (user.username ?? "").trim(),
+                    email: user.email.trim(),
                     password: user.password,
                 })
             })
@@ -44,7 +55,7 @@ export default function SignUp () {
             console.log(data)
 
             if (response.status != 200 || data.message) {
-                setMessage(data.message)
+                setMessage(apiErrorMessage(data))
                 return
             }
 
@@ -52,6 +63,7 @@ export default function SignUp () {
 
         } catch (error) {
             console.log("Error in postUser frontend: ", error);
+            setMessage("Could not reach the server, try again.");
         } finally {
             setTimeout(() => setMessage(""), 10000);
         }
@@ -65,7 +77,7 @@ export default function SignUp () {
                         <Image src={logo} width={40} height={40} alt='logo'></Image>
                         <p className='flex text-[1.5rem] font-bold text-gray-900'>Wallet-<span className='bg-linear-to-t from-green-800 to-green-500 bg-clip-text text-transparent'>AI</span></p>
                     </div>
-                    <form onSubmit={(e) => postUser(e)} className='mx-auto my-auto flex w-full max-w-md flex-col gap-8 py-10'>
+                    <form noValidate onSubmit={(e) => postUser(e)} className='mx-auto my-auto flex w-full max-w-md flex-col gap-8 py-10'>
                         <div className='flex flex-col'>
                            <h1 className='text-4xl font-bold tracking-tight'>Create account</h1>
                             <p className='mt-1 text-[1.05rem] text-gray-600'>Take less than a minute.</p> 
@@ -73,25 +85,29 @@ export default function SignUp () {
                         <div className='flex flex-col gap-4'>
                             <label className='flex flex-col gap-1.5'>
                                 <span className='text-sm font-semibold text-gray-800'>Username:</span>
-                                <input onChange={(e) => setUser({...user, username: e.target.value})} placeholder='Your name...' className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-green-600/30'></input>
+                                <input onChange={(e) => { setUser({...user, username: e.target.value}); setErrors(prev => ({...prev, username: ''})) }} autoComplete='name' maxLength={100} aria-invalid={!!errors.username} aria-describedby='username-error' placeholder='Your name...' className={'w-full rounded-lg border bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:outline-none focus:ring-2 ' + (errors.username ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : 'border-gray-300 focus:border-brand focus:ring-green-600/30')}></input>
+                                {errors.username && <span id='username-error' role='alert' className='text-[0.85rem] text-red-600'>{errors.username}</span>}
                             </label>
                             <label className='flex flex-col gap-1.5'>
                                 <span className='text-sm font-semibold text-gray-800'>Email:</span>
-                                <input onChange={(e) => setUser({...user, email: e.target.value})} type='email' placeholder='example@exam.com' className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-green-600/30'></input>
+                                <input onChange={(e) => { setUser({...user, email: e.target.value}); setErrors(prev => ({...prev, email: ''})) }} type='email' autoComplete='email' maxLength={100} aria-invalid={!!errors.email} aria-describedby='email-error' placeholder='example@exam.com' className={'w-full rounded-lg border bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:outline-none focus:ring-2 ' + (errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : 'border-gray-300 focus:border-brand focus:ring-green-600/30')}></input>
+                                {errors.email && <span id='email-error' role='alert' className='text-[0.85rem] text-red-600'>{errors.email}</span>}
                             </label>
                             <label className='flex flex-col gap-1.5'>
                                 <span className='text-sm font-semibold text-gray-800'>Password:</span>
-                                <input type="password" onChange={(e) => setUser({...user, password: e.target.value})} placeholder='Thebestpageaboutofpersonalfinances' className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-green-600/30'></input>
+                                <input type="password" onChange={(e) => { setUser({...user, password: e.target.value}); setErrors(prev => ({...prev, password: ''})) }} autoComplete='new-password' maxLength={72} aria-invalid={!!errors.password} aria-describedby='password-error' placeholder='Thebestpageaboutofpersonalfinances' className={'w-full rounded-lg border bg-white px-3 py-2.5 text-gray-900 placeholder:text-gray-400 transition focus:outline-none focus:ring-2 ' + (errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500/30' : 'border-gray-300 focus:border-brand focus:ring-green-600/30')}></input>
+                                {errors.password && <span id='password-error' role='alert' className='text-[0.85rem] text-red-600'>{errors.password}</span>}
                                 <span className='text-[0.85rem] text-gray-500'>Minimum 8 characters</span>
                             </label>
                         </div>                        
                         <div className='flex w-full items-center gap-2 text-sm text-gray-700'>
-                            <input onChange={(e) => setCheckBox(e.target.checked)} type='checkbox' className='h-4 w-4 cursor-pointer accent-green-700'></input>
+                            <input checked={checkBox} onChange={(e) => { setCheckBox(e.target.checked); setErrors(prev => ({...prev, terms: ''})) }} type='checkbox' aria-invalid={!!errors.terms} aria-describedby='terms-error' className='h-4 w-4 cursor-pointer accent-green-700'></input>
                             <p>Acepto los terminos y Avisos de privacidad</p>
                         </div>
+                        {errors.terms && <span id='terms-error' role='alert' className='-mt-5 text-[0.85rem] text-red-600'>{errors.terms}</span>}
                         <div className='flex flex-col gap-3 text-center text-gray-600'>
-                            <p className={'m-0 min-h-5 w-full p-0 text-right text-[0.9rem]' + (message.toLowerCase().includes("loading") ? ' text-green-700 ' : ' text-red-600 ')}>{message}</p>
-                            <button type='submit' className='w-full cursor-pointer rounded-lg bg-brand p-3 font-bold text-white shadow-md shadow-green-900/20 transition duration-200 hover:bg-brand-dark active:scale-98 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand'>Create account</button>
+                            <p role='alert' className={'m-0 min-h-5 w-full p-0 text-right text-[0.9rem]' + (message.toLowerCase().includes("loading") ? ' text-green-700 ' : ' text-red-600 ')}>{message}</p>
+                            <button type='submit' disabled={loading} className='w-full cursor-pointer rounded-lg bg-brand p-3 font-bold text-white shadow-md shadow-green-900/20 transition duration-200 hover:bg-brand-dark active:scale-98 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60'>Create account</button>
                             <p>Already have an account? <Link href={'/login'} className='font-semibold text-green-700 underline-offset-4 hover:underline'>Log in</Link></p>                   
                         </div>
                     </form>

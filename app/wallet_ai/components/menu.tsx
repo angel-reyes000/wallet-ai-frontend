@@ -22,11 +22,19 @@ export default function Menu () {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.log("Session expired")
+            refModal.current?.showModal();
+            refModal.current!.style.display = 'flex';
+            return
+        }
+
         const { exp } = jwtDecode(token!)
 
         const expired = (exp! * 1000) - Date.now();
 
-        setTimeout(() => {
+        const expireTimer = setTimeout(() => {
             console.log("Session expired")
             refModal.current?.showModal();
             refModal.current!.style.display = 'flex';
@@ -64,6 +72,9 @@ export default function Menu () {
         }
 
         getDataUser();
+
+        // a stale timer from a previous session would show "Session expired" after logging in again
+        return () => clearTimeout(expireTimer);
 
     }, [])
 

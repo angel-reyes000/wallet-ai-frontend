@@ -6,6 +6,7 @@ import { FaShop } from "react-icons/fa6"
 import { act, useEffect, useState } from "react"
 import { Transaction, TotalToCategory, ListCardsBarChart, TotalToType } from "../schemas/schemas"
 import BarChartTotalTypes from '@/app/wallet_ai/components/graphics/barChartTotalTypes';
+import { validatePeriod, MIN_YEAR, MAX_YEAR } from "@/app/schemas/validation";
 
 export default function WalletAI () {
     const [lastTransactions, setTransactions] = useState<Transaction[]>();
@@ -26,6 +27,14 @@ export default function WalletAI () {
     useEffect(() => {
 
         const token = localStorage.getItem('token');
+
+        // Do not query with a half typed year ("20") or a month without year: show why instead.
+        const periodError = validatePeriod(filterMonth, filterYear);
+
+        if (periodError) {
+            setErrorFilter(periodError);
+            return
+        }
 
         if (filterMonth.length > 0 || filterYear.length > 0) {
             setFilterAllTime(false)
@@ -56,7 +65,7 @@ export default function WalletAI () {
 
                 if (response.status != 200) {
                     console.log("Erorr in getTransactionResume: ", data)
-                    setErrorFilter(data.datail)
+                    setErrorFilter(data.detail)
                     return
                 }
 
@@ -86,7 +95,7 @@ export default function WalletAI () {
 
                 if (response.status != 200) {
                     console.log("Erorr in getTransactionResume: ", data)
-                    setErrorFilter(data.datail)
+                    setErrorFilter(data.detail)
                     return
                 }
 
@@ -252,28 +261,31 @@ export default function WalletAI () {
                         <label className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-green-100/80">Year:</span>
                             <input value={filterYear} onChange={(e) => setFilterYear(e.target.value)}
-                                type="number" min={2000}
-                                className="app-field w-full sm:w-28">
+                                type="number" min={MIN_YEAR} max={MAX_YEAR} aria-invalid={!!errorFilter}
+                                className={"app-field w-full sm:w-28" + (errorFilter ? " !border-red-500" : "")}>
                             </input>
                         </label>
                         <button onClick={() => activeFilterAllTime()} className="btn btn-primary">All time</button>
+                        {errorFilter && <p role="alert" className="w-full text-sm font-medium text-red-400 sm:basis-full">{errorFilter}</p>}
                     </div>
                 </div>
-                <div className="app-card h-[300px] w-full">
-                    <LineChartTotalMoney ListValuesLineChart={listValuesLineChart!} DataLabelsX={dataLabelsX!} />
-                </div>
-                <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="app-card flex flex-col gap-1 p-4">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total balance</p>
-                        <p className="text-2xl font-bold tabular-nums">{totalBalance || 0}</p>
+                <div className="app-card relative w-full md:h-[300px]">
+                    <div className="z-10 mb-3 flex flex-wrap gap-x-20 gap-y-2 md:absolute md:top-4 md:right-5 md:mb-0 md:justify-end">
+                        <div className="flex flex-col">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total balance</p>
+                            <p className="text-xl font-bold tabular-nums">{totalBalance || 0}</p>
+                        </div>
+                        <div className="flex flex-col">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total Incomes</p>
+                            <p className="text-xl font-bold tabular-nums text-green-400">{totalIncomes || 0}</p>
+                        </div>
+                        <div className="flex flex-col">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total expenses</p>
+                            <p className="text-xl font-bold tabular-nums text-red-400">{totalExpenses || 0}</p>
+                        </div>
                     </div>
-                    <div className="app-card flex flex-col gap-1 p-4">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total Incomes</p>
-                        <p className="text-2xl font-bold tabular-nums text-green-400">{totalIncomes || 0}</p>
-                    </div>
-                    <div className="app-card flex flex-col gap-1 p-4">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-green-100/70">Total expenses</p>
-                        <p className="text-2xl font-bold tabular-nums text-red-400">{totalExpenses || 0}</p>
+                    <div className="h-[260px] w-full md:h-full">
+                        <LineChartTotalMoney ListValuesLineChart={listValuesLineChart!} DataLabelsX={dataLabelsX!} />
                     </div>
                 </div>
                 <div className="flex flex-col gap-6 lg:flex-row">
@@ -317,7 +329,7 @@ export default function WalletAI () {
                                 const row = listTotalToType?.find(r => r.type === type)
                                 return (
                                     <div key={type} className="flex flex-col gap-3 rounded-xl border border-white/10 bg-black/20 p-3 sm:flex-row sm:items-center">
-                                        <div className={`${bg} flex h-[80px] items-center rounded-xl p-3 sm:w-[170px] sm:shrink-0`}>
+                                        <div className={`${bg} flex h-[80px] items-center rounded-xl p-3 text-[#ffffff] sm:w-[170px] sm:shrink-0`}>
                                             <p className="text-xl font-semibold">{label}</p>
                                         </div>
                                         <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
