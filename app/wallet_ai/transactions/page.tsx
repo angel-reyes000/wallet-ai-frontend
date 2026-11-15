@@ -4,6 +4,11 @@ import { FaPlus, FaSearch, FaTrash } from 'react-icons/fa'
 import { useEffect, useRef, useState } from 'react'
 import { Transaction, Category, Card, ModalModes, StateMessage } from '@/app/schemas/schemas';
 import Message from '../components/message';
+import { validateTransaction, hasErrors, apiErrorMessage } from '@/app/schemas/validation';
+
+function FieldError ({ text }: { text?: string }) {
+    return text ? <span role='alert' className='text-xs text-red-400'>{text}</span> : null
+}
 
 export default function Transactions () {
     const [dataTransactions, setDataTransactions] = useState<Transaction[]>([]);
@@ -27,6 +32,8 @@ export default function Transactions () {
         type: "info",
     });
     const [inputSearch, setInputSearch] = useState<string>("");
+    const [attempted, setAttempted] = useState<boolean>(false);
+    const [formStatus, setFormStatus] = useState<{ type: "error" | "success", text: string } | null>(null);
     const [filters, setFilters] = useState({
         all: true,
         incomes: false,
@@ -35,6 +42,9 @@ export default function Transactions () {
     });
 
     function openModal (mode: ModalModes, transaction?: Transaction) {
+        setAttempted(false);
+        setFormStatus(null);
+
         if (mode === "add") {
             refModalAdd.current?.showModal()
             refModalAdd.current!.style.display = 'flex';
@@ -56,6 +66,9 @@ export default function Transactions () {
     }
 
     function closeModal(mode: ModalModes) {
+        setAttempted(false);
+        setFormStatus(null);
+
         if (mode === "add") {
             refModalAdd.current?.close()
             refModalAdd.current!.style.display = 'none'
@@ -188,6 +201,31 @@ export default function Transactions () {
 
     }, [])
 
+    const formErrors = attempted
+        ? validateTransaction(transaction, {
+            categories: categories?.map(obj => obj.category_name),
+            cards: cards?.map(obj => obj.name),
+        })
+        : {};
+
+    function submitTransaction (mode: ModalModes) {
+        setAttempted(true);
+        setFormStatus(null);
+
+        const found = validateTransaction(transaction, {
+            categories: categories?.map(obj => obj.category_name),
+            cards: cards?.map(obj => obj.name),
+        });
+
+        if (hasErrors(found)) return;
+
+        if (mode === "add") {
+            postTransaction();
+        } else {
+            updateTransaction();
+        }
+    }
+
     async function postTransaction () {
         
         const token = localStorage.getItem('token');
@@ -215,11 +253,14 @@ export default function Transactions () {
             if (response.status != 200) {
                 console.log("Error in getTransactions frontend.")
                 setStateMessage({active: true, message: data.detail, type: 'bad'});
+                setFormStatus({ type: "error", text: apiErrorMessage(data) });
                 return
             }            
 
             setDataTransactions(obj => [...obj, data]);
             setStateMessage({active: true, message: "Transaction succesfully created.", type: 'good'});
+            setAttempted(false);
+            setFormStatus({ type: "success", text: "Transaction succesfully created." });
 
             setTransaction({
                 id: 0,
@@ -232,6 +273,7 @@ export default function Transactions () {
 
         } catch (error) {
             console.log("Error in postTransaction: ", error)
+            setFormStatus({ type: "error", text: "Could not reach the server, try again." });
         } finally {
             setTimeout(() => setStateMessage({active: false, message: "", type: 'info'}), 5000);
         }
@@ -264,6 +306,7 @@ export default function Transactions () {
 
             if (response.status != 200) {
                 console.log("Error in updateTransaction")
+                setFormStatus({ type: "error", text: apiErrorMessage(data) });
                 return
             }
 
@@ -280,6 +323,7 @@ export default function Transactions () {
 
         } catch (error) {
             console.log("Error in updateTransaction: ", error)
+            setFormStatus({ type: "error", text: "Could not reach the server, try again." });
         }
     }
 
@@ -301,6 +345,7 @@ export default function Transactions () {
 
             if (response.status != 200) {
                 console.log("Error in deleteTransaction")
+                setFormStatus({ type: "error", text: apiErrorMessage(data) });
                 return
             }
 
@@ -312,6 +357,7 @@ export default function Transactions () {
 
         } catch (error) {
             console.log("Error in deleteTransaction: ", error)
+            setFormStatus({ type: "error", text: "Could not reach the server, try again." });
         }
     }
 
@@ -326,36 +372,42 @@ export default function Transactions () {
                 <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Date:</span>
-                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='app-field'></input>
+                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' min='2000-01-01' max='2100-12-31' aria-invalid={!!formErrors.date} className={'app-field' + (formErrors.date ? ' !border-red-500' : '')}></input>
+                        <FieldError text={formErrors.date} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Category:</span>
-                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='app-field cursor-pointer'>
+                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} aria-invalid={!!formErrors.category} className={'app-field cursor-pointer' + (formErrors.category ? ' !border-red-500' : '')}>
                             {categories?.map(obj => (
                                 <option key={obj.id}>{obj.category_name}</option>
                             ))}
                         </select>
+                        <FieldError text={formErrors.category} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Type:</span>
-                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='app-field cursor-pointer'>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} aria-invalid={!!formErrors.card} className={'app-field cursor-pointer' + (formErrors.card ? ' !border-red-500' : '')}>
                             <option>Cash</option>
                             {cards?.map(obj => (
                                 <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
+                        <FieldError text={formErrors.card} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Amount:</span>
-                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='app-field'></input>
+                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' step='0.01' min={-9999999.99} max={9999999.99} aria-invalid={!!formErrors.amount} className={'app-field' + (formErrors.amount ? ' !border-red-500' : '')}></input>
+                        {formErrors.amount ? <FieldError text={formErrors.amount} /> : <span className='text-xs text-green-100/60'>Use a negative number for expenses.</span>}
                     </label>
                     <label className='flex w-full flex-col gap-1 sm:col-span-2'>
                         <span className='text-sm font-semibold text-green-100/80'>Description:</span>
-                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='app-field min-h-24'></textarea>
+                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' maxLength={500} aria-invalid={!!formErrors.description} className={'app-field min-h-24' + (formErrors.description ? ' !border-red-500' : '')}></textarea>
+                        <FieldError text={formErrors.description} />
                     </label>
                 </div>
+                {formStatus && <p role='status' className={'text-sm font-medium ' + (formStatus.type === 'error' ? 'text-red-400' : 'text-green-300')}>{formStatus.text}</p>}
                 <div className='flex flex-row gap-3'>
-                    <button onClick={() => postTransaction()} className='btn btn-primary flex-1 py-2.5'>Save</button>
+                    <button onClick={() => submitTransaction("add")} className='btn btn-primary flex-1 py-2.5'>Save</button>
                     <button onClick={() => closeModal("add")} className='btn btn-ghost flex-1 py-2.5'>Cancel</button>
                 </div>
             </dialog>
@@ -368,36 +420,42 @@ export default function Transactions () {
                 <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Date:</span>
-                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' className='app-field'></input>
+                        <input value={transaction?.date} onChange={((e) => setTransaction(obj => ({...obj, date: e.target.value})))} type='date' min='2000-01-01' max='2100-12-31' aria-invalid={!!formErrors.date} className={'app-field' + (formErrors.date ? ' !border-red-500' : '')}></input>
+                        <FieldError text={formErrors.date} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Category:</span>
-                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} className='app-field cursor-pointer'>
+                        <select value={transaction?.category} onChange={(e) => setTransaction(obj => ({...obj, category: e.target.value}))} aria-invalid={!!formErrors.category} className={'app-field cursor-pointer' + (formErrors.category ? ' !border-red-500' : '')}>
                             {categories?.map(obj => (
                                 <option key={obj.id}>{obj.category_name}</option>
                             ))}
                         </select>
+                        <FieldError text={formErrors.category} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Type:</span>
-                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} className='app-field cursor-pointer'>
+                        <select value={transaction?.card} onChange={(e) => setTransaction(obj => ({...obj, card: e.target.value}))} aria-invalid={!!formErrors.card} className={'app-field cursor-pointer' + (formErrors.card ? ' !border-red-500' : '')}>
                             <option>Cash</option>
                             {cards?.map(obj => (
                                 <option key={obj.id}>{obj.name}</option>
                             ))}
                         </select>
+                        <FieldError text={formErrors.card} />
                     </label>
                     <label className='flex w-full flex-col gap-1'>
                         <span className='text-sm font-semibold text-green-100/80'>Amount:</span>
-                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' className='app-field'></input>
+                        <input value={transaction?.amount} onChange={(e) => setTransaction(obj => ({...obj, amount: Number(e.target.value)}))} type='number' step='0.01' min={-9999999.99} max={9999999.99} aria-invalid={!!formErrors.amount} className={'app-field' + (formErrors.amount ? ' !border-red-500' : '')}></input>
+                        {formErrors.amount ? <FieldError text={formErrors.amount} /> : <span className='text-xs text-green-100/60'>Use a negative number for expenses.</span>}
                     </label>
                     <label className='flex w-full flex-col gap-1 sm:col-span-2'>
                         <span className='text-sm font-semibold text-green-100/80'>Description:</span>
-                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' className='app-field min-h-24'></textarea>
+                        <textarea value={transaction.description} onChange={(e) => setTransaction(obj => ({...obj, description: e.target.value}))} placeholder='This is... for this.' maxLength={500} aria-invalid={!!formErrors.description} className={'app-field min-h-24' + (formErrors.description ? ' !border-red-500' : '')}></textarea>
+                        <FieldError text={formErrors.description} />
                     </label>
                 </div>
+                {formStatus && <p role='status' className={'text-sm font-medium ' + (formStatus.type === 'error' ? 'text-red-400' : 'text-green-300')}>{formStatus.text}</p>}
                 <div className='flex flex-row gap-3'>
-                    <button onClick={() => updateTransaction()} className='btn btn-primary flex-1 py-2.5'>Edit</button>
+                    <button onClick={() => submitTransaction("edit")} className='btn btn-primary flex-1 py-2.5'>Edit</button>
                     <button onClick={() => closeModal("edit")} className='btn btn-ghost flex-1 py-2.5'>Cancel</button>
                     <button aria-label='Delete transaction' onClick={() => deleteTransaction(transaction.id)} className='btn btn-danger px-3 py-2.5'><FaTrash size={18} /></button>
                 </div>
@@ -409,7 +467,7 @@ export default function Transactions () {
                     <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
                         <div className='flex flex-row items-center gap-2 rounded-lg border border-white/15 bg-black/30 px-3 py-2 transition focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500/30'>
                             <FaSearch size={15} className='text-green-300' />
-                            <input value={inputSearch} onChange={(e) => setInputSearch(e.target.value)} className='w-full bg-transparent text-white placeholder:text-white/40 focus:outline-0' placeholder="Search..."></input>
+                            <input value={inputSearch} onChange={(e) => setInputSearch(e.target.value)} maxLength={100} className='w-full bg-transparent text-white placeholder:text-white/40 focus:outline-0' placeholder="Search..."></input>
                         </div>
                         <button onClick={() => openModal("add")}
                             className='btn btn-primary px-4 py-2.5'>

@@ -8,6 +8,7 @@ import { Messages } from "@/app/schemas/schemas";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import '../../styles/styles.css';
+import { validateChatMessage, apiErrorMessage, MAX_CHAT_MESSAGE } from '@/app/schemas/validation';
 
 export default function ChatAgent () {
 
@@ -15,6 +16,8 @@ export default function ChatAgent () {
     const [messages, setMessages] = useState<Messages[]>([]);
     const [inputMessage, setInputMessage] = useState<string>("");
     const [thinking, setThinking] = useState<boolean>(false);
+    const [chatError, setChatError] = useState<string>("");
+    const [sending, setSending] = useState<boolean>(false);
 
     const lastMessage = useRef<HTMLDivElement>(null)
     const refTextArea = useRef<HTMLDivElement>(null)
@@ -68,7 +71,20 @@ export default function ChatAgent () {
     async function postMessage () {
         const token = localStorage.getItem("token");
 
-        const message = inputMessage
+        // Validate first: nothing is sent while a reply is still being written or the text is invalid.
+        const invalid = validateChatMessage(inputMessage);
+
+        if (sending) return;
+
+        if (invalid) {
+            setChatError(invalid);
+            return
+        }
+
+        setChatError("");
+        setSending(true);
+
+        const message = inputMessage.trim()
         let id = Date.now();
 
         setInputMessage("")
@@ -78,7 +94,7 @@ export default function ChatAgent () {
 
             setThinking(true);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/agent/postMessage`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API}/agent/postMessageStream`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -89,20 +105,66 @@ export default function ChatAgent () {
                 })
             })
 
-            const data = await response.json()
-
-            if (response.status != 200) {
-                console.log("Error to post message: ", data.detail)   
+            if (response.status != 200 || !response.body) {
+                const data = await response.json().catch(() => null)
+                console.log("Error to post message: ", data?.detail)
+                setChatError(apiErrorMessage(data, "The agent could not answer, try again."))
+                return
             }
 
-            console.log("MESSAGE POST: ", data)
+            // The reply arrives as Server-Sent Events: {"token"} per token, then {"done", "message"}.
+            const replyId = id + 1;
+            let reply = "";
+            let started = false;
 
-            setMessages(prev => [...prev, data])
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+
+            while (true) {
+                const { done, value } = await reader.read();
+
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+
+                const events = buffer.split("\n\n");
+                buffer = events.pop() ?? "";
+
+                for (const rawEvent of events) {
+                    const line = rawEvent.trim();
+
+                    if (!line.startsWith("data:")) continue;
+
+                    const data = JSON.parse(line.slice(5).trim());
+
+                    if (data.error) {
+                        console.log("Error to post message: ", data.error)
+                        setChatError(String(data.error))
+                    } else if (data.token) {
+                        reply += data.token;
+
+                        if (!started) {
+                            started = true;
+                            setThinking(false);
+                            setMessages(prev => [...prev, {"id": replyId, "role": "ai", "message": reply}])
+                        } else {
+                            setMessages(prev => prev.map(obj => obj.id === replyId ? {...obj, "message": reply} : obj))
+                        }
+                    } else if (data.done) {
+                        // Replace the streamed text with the saved message (keeps the same key, no remount).
+                        const saved = {...data.message, "id": replyId};
+                        setMessages(prev => started ? prev.map(obj => obj.id === replyId ? saved : obj) : [...prev, saved])
+                    }
+                }
+            }
 
         } catch (error) {
             console.log("Error in postMessages", error)
+            setChatError("Could not reach the server, try again.")
         } finally {
             setThinking(false)
+            setSending(false)
         }
     }
 
@@ -136,8 +198,19 @@ export default function ChatAgent () {
                         <div ref={lastMessage} />
                     </div>
                     <div className="absolute inset-x-0 bottom-0 flex h-auto w-full items-center justify-between gap-2 border-t border-white/10 bg-app-surface p-2">
-                        <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} placeholder="Write..." className="app-field min-h-[56px] max-h-[80px] flex-1 resize-none"></textarea>
-                        <button onClick={() => postMessage()} aria-label="Send message" className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-green-700 p-3 text-white transition duration-200 hover:bg-green-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400">
+                        {(chatError || inputMessage.length > MAX_CHAT_MESSAGE - 200) && (
+                            <p role="alert" className={"absolute inset-x-0 bottom-full bg-app-surface/95 px-3 py-1 text-xs font-medium " + (chatError ? "text-red-400" : "text-green-100/70")}>
+                                {chatError || inputMessage.length + "/" + MAX_CHAT_MESSAGE}
+                            </p>
+                        )}
+                        <textarea value={inputMessage} maxLength={MAX_CHAT_MESSAGE} onChange={(e) => { setInputMessage(e.target.value); setChatError("") }} onKeyDown={(e) => {
+                            // Enter sends the message; Shift+Enter inserts a new line (IME composition is ignored).
+                            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                                e.preventDefault();
+                                if (inputMessage.trim().length > 0 && !sending) postMessage();
+                            }
+                        }} placeholder="Write..." className="app-field min-h-[56px] max-h-[80px] flex-1 resize-none"></textarea>
+                        <button onClick={() => postMessage()} disabled={sending || inputMessage.trim().length === 0} aria-label="Send message" className="flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-green-700 p-3 text-white transition duration-200 hover:bg-green-600 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 disabled:cursor-not-allowed disabled:opacity-50">
                             <FiSend size={22} className="w-fit"/>
                         </button>
                     </div>

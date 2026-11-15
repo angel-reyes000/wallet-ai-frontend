@@ -3,6 +3,22 @@
 import { FaPlus } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/app/schemas/schemas";
+import { validateCard, hasErrors, apiErrorMessage, type FieldErrors } from "@/app/schemas/validation";
+
+type CardStatus = { type: "error" | "success", text: string } | null;
+
+function ErrorList ({ errors, status }: { errors: FieldErrors, status: CardStatus }) {
+    const messages = Object.values(errors);
+
+    if (messages.length === 0 && !status) return null;
+
+    return (
+        <div role="alert" className="flex flex-col gap-1 text-sm font-medium">
+            {messages.map(text => <p key={text} className="text-red-400">{text}</p>)}
+            {status && <p className={status.type === "error" ? "text-red-400" : "text-green-300"}>{status.text}</p>}
+        </div>
+    )
+}
 
 export default function Cards () {
     const [openModalAddCard, setOpenModalAddCard] = useState<boolean>(false);
@@ -12,11 +28,14 @@ export default function Cards () {
         name: "",
         type: "",
         last_numbers: "",
-        background_color: "white",
-        color: "black",
+        background_color: "#ffffff",
+        color: "#000000",
         expired_date: "",
         created_at: "",
     });
+
+    const [attempted, setAttempted] = useState<boolean>(false);
+    const [cardStatus, setCardStatus] = useState<CardStatus>(null);
 
     const refModalAddCard = useRef<HTMLDialogElement>(null);
 
@@ -83,6 +102,30 @@ export default function Cards () {
         }
     }
 
+    const cardErrors = attempted
+        ? validateCard(dataCard, { otherNames: cards.filter(obj => obj.id !== dataCard.id).map(obj => obj.name) })
+        : {};
+
+    function submitCard (mode: "add" | "edit") {
+        setAttempted(true);
+        setCardStatus(null);
+
+        const found = validateCard(dataCard, { otherNames: cards.filter(obj => obj.id !== dataCard.id).map(obj => obj.name) });
+
+        if (hasErrors(found)) return;
+
+        if (mode === "add") {
+            postCard();
+        } else {
+            updateCard();
+        }
+    }
+
+    function resetFormFeedback () {
+        setAttempted(false);
+        setCardStatus(null);
+    }
+
     async function postCard () {
 
         const token = localStorage.getItem('token');
@@ -109,6 +152,7 @@ export default function Cards () {
 
             if (response.status != 200) {
                 console.log("Error post card: ", data.detail)
+                setCardStatus({ type: "error", text: apiErrorMessage(data) });
                 return
             }
 
@@ -116,9 +160,11 @@ export default function Cards () {
             setCards(prev => [...prev, data])
             refModalAddCard.current?.close()
             refModalAddCard.current!.style.display = 'none';
+            resetFormFeedback();
 
         } catch (error) {
             console.log("Error in postCard: ", error)
+            setCardStatus({ type: "error", text: "Could not reach the server, try again." });
         }
     }
 
@@ -149,9 +195,12 @@ export default function Cards () {
 
             if (response.status != 200) {
                 console.log("Error update card: ", data.detail)
+                setCardStatus({ type: "error", text: apiErrorMessage(data) });
+                return
             }
 
             console.log(data)
+            resetFormFeedback();
             getCards();
             setDataCard({
                 id: 0,
@@ -166,6 +215,7 @@ export default function Cards () {
 
         } catch (error) {
             console.log("Error in updateCard: ", error)
+            setCardStatus({ type: "error", text: "Could not reach the server, try again." });
         }
     }
 
@@ -177,6 +227,7 @@ export default function Cards () {
                     <button aria-label="Close" onClick={() => {
                         refModalAddCard.current?.close()
                         refModalAddCard.current!.style.display = 'none';
+                        resetFormFeedback();
                     }} className="cursor-pointer rounded-lg p-2 rotate-45 transition-colors hover:bg-white/10 active-scale-95"><FaPlus size={22} /></button>
                 </div>
                 <div className="flex flex-col gap-5">
@@ -184,11 +235,12 @@ export default function Cards () {
                         <div className="flex justify-between gap-5">
                             <label className="flex gap-1 text-[1.05rem] font-semibold">
                                 <span>Name: </span>
-                                <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} className="w-[80%] focus:outline-0 border-b-1"></input>
+                                <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} maxLength={30} className="w-[80%] focus:outline-0 border-b-1"></input>
                             </label>
                             <label className="flex gap-1 text-[1.05rem] font-semibold">
                                 <span>Type:</span>
                                 <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})}>
+                                    <option value={''} disabled>Select type</option>
                                     <option value={'Credit'}>Credit</option>
                                     <option value={'Debit'}>Debit</option>
                                 </select>
@@ -196,7 +248,7 @@ export default function Cards () {
                         </div>
                         <label className="w-[80%] text-[1.05rem] font-semibold">
                             Last four digits: *******************
-                            <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="w-[20%]"></input>
+                            <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value.replace(/\D/g, "").slice(0, 4)})} inputMode="numeric" maxLength={4} className="w-[20%]"></input>
                         </label>
                         <div className="flex items-center justify-between">
                             <label>
@@ -204,7 +256,7 @@ export default function Cards () {
                             </label>
                             <label className="font-semibold">
                                 <span >Vence: </span>
-                                <input value={dataCard.expired_date} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month"></input>
+                                <input value={dataCard.expired_date} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month" min="2000-01" max="2100-12"></input>
                             </label>
                         </div>
                     </div>
@@ -219,11 +271,13 @@ export default function Cards () {
                         </label>
                     </div>
                 </div>
+                <ErrorList errors={cardErrors} status={cardStatus} />
                 <div className="flex justify-end gap-3">
-                    <button onClick={() => postCard()} className="btn btn-primary w-[110px]">Save</button>
+                    <button onClick={() => submitCard("add")} className="btn btn-primary w-[110px]">Save</button>
                     <button onClick={() => {
                         refModalAddCard.current?.close()
                         refModalAddCard.current!.style.display = 'none';
+                        resetFormFeedback();
                     }} className="btn btn-ghost w-[110px]">Cancel</button>
                 </div>
             </dialog>
@@ -234,6 +288,7 @@ export default function Cards () {
                         <p className="mt-1 text-green-100/70">Analize visually your cards</p>
                     </div>
                     <button onClick={() => {
+                        resetFormFeedback();
                         refModalAddCard.current?.showModal()
                         refModalAddCard.current!.style.display = 'flex';
                         setDataCard({
@@ -241,8 +296,8 @@ export default function Cards () {
                             name: "",
                             type: "",
                             last_numbers: "",
-                            background_color: "white",
-                            color: "black",
+                            background_color: "#ffffff",
+                            color: "#000000",
                             expired_date: "",
                             created_at: "",
                         })
@@ -265,7 +320,7 @@ export default function Cards () {
                             <div className="flex w-full min-w-0 flex-col gap-5">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold">Details</h2>
-                                    <button onClick={() => setDataCard(card)} className="btn btn-primary">Edit card</button>
+                                    <button onClick={() => { resetFormFeedback(); setDataCard(card); }} className="btn btn-primary">Edit card</button>
                                 </div>
                                 <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2 xl:grid-cols-3">
                                     <label className="flex flex-wrap gap-1">
@@ -314,38 +369,40 @@ export default function Cards () {
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold">Details</h2>
                                     <div className="flex gap-2">
-                                        <button onClick={() => updateCard()} className="btn btn-primary">Save</button>
-                                        <button onClick={() => setDataCard({
+                                        <button onClick={() => submitCard("edit")} className="btn btn-primary">Save</button>
+                                        <button onClick={() => { resetFormFeedback(); setDataCard({
                                             id: 0,
                                             name: "",
                                             type: "",
                                             last_numbers: "",
-                                            background_color: "white",
-                                            color: "black",
+                                            background_color: "#ffffff",
+                                            color: "#000000",
                                             expired_date: "",
                                             created_at: "",
-                                        })} className="btn btn-danger">cancel</button>
+                                        }); }} className="btn btn-danger">cancel</button>
                                     </div>
                                 </div>
+                                <ErrorList errors={cardErrors} status={cardStatus} />
                                 <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
                                     <label className="flex flex-col gap-1">
                                         <span className="text-sm font-semibold text-green-100/70">Name card:</span>
-                                        <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} placeholder="name..." className="app-field"></input>
+                                        <input value={dataCard.name} onChange={(e) => setDataCard({...dataCard, name: e.target.value})} placeholder="name..." maxLength={30} aria-invalid={!!cardErrors.name} className={"app-field" + (cardErrors.name ? " !border-red-500" : "")}></input>
                                     </label>
                                     <label className="flex flex-col gap-1">
                                         <span className="text-sm font-semibold text-green-100/70">Type:</span>
                                         <select value={dataCard.type} onChange={(e) => setDataCard({...dataCard, type: e.target.value})} className="app-field cursor-pointer">
-                                            <option value={'Credit'}>Credit</option>
+                                            <option value={''} disabled>Select type</option>
+                                    <option value={'Credit'}>Credit</option>
                                             <option value={'Debit'}>Debit</option>
                                         </select>
                                     </label>
                                     <label className="flex flex-col gap-1">
                                         <span className="text-sm font-semibold text-green-100/70">Last four digits:</span>
-                                        <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value})} className="app-field"></input>
+                                        <input value={dataCard.last_numbers} onChange={(e) => setDataCard({...dataCard, last_numbers: e.target.value.replace(/\D/g, "").slice(0, 4)})} inputMode="numeric" maxLength={4} aria-invalid={!!cardErrors.last_numbers} className={"app-field" + (cardErrors.last_numbers ? " !border-red-500" : "")}></input>
                                     </label>
                                     <label className="flex flex-col gap-1">
                                         <span className="text-sm font-semibold text-green-100/70">Expired date:</span>
-                                        <input value={dataCard.expired_date?.slice(0,7)} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month" className="app-field [&::-webkit-calendar-picker-indicator]:invert cursor-pointer"></input>
+                                        <input value={dataCard.expired_date?.slice(0,7)} onChange={(e) => setDataCard({...dataCard, expired_date: e.target.value})} type="month" min="2000-01" max="2100-12" aria-invalid={!!cardErrors.expired_date} className={"app-field [&::-webkit-calendar-picker-indicator]:invert cursor-pointer" + (cardErrors.expired_date ? " !border-red-500" : "")}></input>
                                     </label>
                                     <label className="flex items-center gap-2">
                                         <span className="text-sm font-semibold text-green-100/70">Background color:</span>

@@ -2,15 +2,18 @@
 
 import ReactECharts from "echarts-for-react";
 import { TotalToCategory } from "@/app/schemas/schemas";
+import { useSettings } from "../settingsProvider";
 
 export default function PieChartExpensesToCategory({ TotalCategoryValue }: { TotalCategoryValue: TotalToCategory[] | undefined }) {
+  const { theme } = useSettings();
+  const ink = theme === "light" ? "#052e16" : "#ffffff";
   const option = {
     title: {
         text: "Total to category",
         left: "left",
         top: 0,
         textStyle: {
-          color: "#ffffff",
+          color: ink,
           fontWeight: "bold",
           fontSize: 18,
         },
@@ -62,7 +65,7 @@ export default function PieChartExpensesToCategory({ TotalCategoryValue }: { Tot
         right: 30,
         top: "center",
         textStyle: {
-          color: "#ffffff",
+          color: ink,
           fontWeight: "bold",
         },
     },
