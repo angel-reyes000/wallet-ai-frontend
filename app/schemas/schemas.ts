@@ -71,6 +71,14 @@ export interface Card {
     created_at: string
 }
 
+export interface TotalToType {
+    type: string
+    total_money: number
+    total_moviments: number
+    total_incomes: number
+    total_expenses: number
+}
+
 export interface ListCardsBarChart {
     card: string
     background_color: string
