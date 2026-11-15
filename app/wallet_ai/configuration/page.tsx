@@ -13,8 +13,7 @@ your data is storaged sure.
 
 const textAboutOf = `
 This application was created with the propuse of learning and practice with AI tools 
-and the technologies used was Next.js, FastAPI, LangChain, LangGraph, JWT, bcrypt, PostgreSQL
-and deployed in vercel and railway.
+and the technologies.
 `
 
 export default function Configuration () {
